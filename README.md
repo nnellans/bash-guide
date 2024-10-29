@@ -17,8 +17,8 @@
 
 ---
 
-# Shebang Statement
-All bash scripts should start with a shebang statement at the top.  This statement tells the kernel which interpreter to use when running the script.  Some common shebang statements for a bash script look like this:
+# Shebang
+All bash scripts should start with a shebang line at the top.  This line tells the kernel which interpreter to use when running the script.  Some common examples:
 
 ```shell
 #!/bin/bash
@@ -44,9 +44,21 @@ There are multiple types of commands you can run within bash:
 3. Shell functions
 4. Aliases
 
+How to get information & help on commands:
+
 ![](images/bash-commands.png)
 
 > [!NOTE]  
 > You can put more than 1 command on a single line by separating them with semicolons
+> ```shell
+> echo "this"; echo "that"; echo "up"; echo "down"
 
+# Variables
 
+Variables in bash come in a few different flavors
+
+## User-Defined Variables
+
+## Environment Variables
+
+## Local Variables
