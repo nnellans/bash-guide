@@ -17,5 +17,19 @@
 
 ---
 
-# Bash...
-bash...
+# Shebang Statement
+All bash scripts should start with a shebang statement at the top.  This statement tells the kernel which interpreter to use when running the script.  A common shebang statement for a bash script looks like this:
+
+```shell
+#!/bin/bash
+```
+
+This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`.  Therefore, it is commonly recommended to use a shebang like this, instead:
+
+```shell
+#!/usr/bin/env bash
+```
+
+This second form will run the first `bash` found in your `$PATH` variable.  But, this may not work for 100% of cases either, because `env` may not always be found under `/usr/bin`
+
+# 
