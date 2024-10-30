@@ -32,7 +32,7 @@ Portable (somewhat) version:
 #!/usr/bin/env bash
 
 # For portability reasons, it is commonly recommended to use a shebang like this
-# This verison will run the first bash found in your $PATH variable
+# This version will run the first bash found in your $PATH variable
 # This may not work for 100% of cases either, because env may not always be found under /usr/bin on all systems
 ```
 
@@ -48,16 +48,75 @@ How to get information & help on commands:
 
 ![](images/bash-commands.png)
 
-> [!NOTE]  
-> You can put more than 1 command on a single line by separating them with semicolons
-> ```shell
-> echo "this"; echo "that"; echo "up"; echo "down"
+You can put more than 1 command on a single line by separating them with semicolons, like so:
+
+```shell
+echo "this"; echo "that"; echo "up"; echo "down"
+```
+
+You can extend a single command over multiple lines for better readability using backslashes, like so:
+
+```shell
+ls --no-group \
+  --inode \
+  --reverse \
+  --recursive \
+  --size
+```
 
 # Variables
 
 Variables in bash come in a few different flavors
 
-## User-Defined Variables
+## Shell Variables
+
+Shell variables are only available to the particular shell session or script in which they are created.
+
+Naming conventions:
+- May contain letters, numbers, and underscores
+- Must not start with a number
+- Names are case-sensitive, so `varname` is different than `VarName`
+- It is common to use all lowercase letters for normal shell variables
+- It is common to use all uppercase letters for "constants" (shell variables whose value should never change)
+
+Defining Variables:
+
+```shell
+# you can defne a shell variable by simply assigning a value to it
+# there must be no spaces between the end of the variable name, the equals sign, and the start of the value
+variable_name="Some value"
+
+# you can define multiple variables on the same line
+var1="value1" var2="value2" var3="value3"
+
+# another method is to use the declare command
+declare varName="value"
+declare -r varName="value" # the -r marks this variable as read-only (constant)
+declare -i varName=34527   # the -i marks this variable with the 'integer' attribute
+declare -a varName         # the -a declares an indexed array
+declare -A varName         # the -A declares an associative array
+```
+
+Using Variables:
+
+```shell
+# best practice is to always enclose variables with double-quotes
+# the exception is when you need to use word splitting
+
+# you can use a variable by preceding it with a $ symbol
+echo "$varname"
+
+# optionally, you can add curly braces to the name to help with string concatenation
+echo "${varname}_other_text"
+```
+
+Assigning temporary values to variables:
+
+```shell
+# in this example we are assigning values to variables in the same line where we run a command
+# these assignments take effect only for the duration of the specified command
+var1="value1" var2="value2" command
+```
 
 ## Environment Variables
 
