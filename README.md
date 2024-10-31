@@ -18,23 +18,20 @@
 ---
 
 # Shebang
-All bash scripts should start with a shebang line at the top.  This line tells the kernel which interpreter to use when running the script.  Some common examples:
+All bash scripts should start with a shebang line at the top.  This line tells the kernel which interpreter to use when running the script.
 
-```shell
-#!/bin/bash
-
-# This may not work in 100% of cases, as some systems place bash in a different location other than /bin
-```
-
+Standard example:
+- This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
+- ```shell
+  #!/bin/bash
+  ```
 Portable (somewhat) version:
-
-```shell
-#!/usr/bin/env bash
-
-# For portability reasons, it is commonly recommended to use a shebang like this
-# This version will run the first bash found in your $PATH variable
-# This may not work for 100% of cases either, because env may not always be found under /usr/bin on all systems
-```
+- For portability reasons, it is commonly recommended to use a shebang like this
+- This version will run the first `bash` found in your `$PATH` variable
+- This may not work for 100% of cases either, because `env` may not always be found under `/usr/bin` on all systems
+- ```shell
+  #!/usr/bin/env bash
+  ```
 
 # Commands
 
@@ -48,13 +45,13 @@ How to get information & help on commands:
 
 ![](images/bash-commands.png)
 
-You can put more than 1 command on a single line by separating them with semicolons, like so:
+You can put more than 1 command on a single line by separating them with semicolons:
 
 ```shell
 echo "this"; echo "that"; echo "up"; echo "down"
 ```
 
-You can extend a single command over multiple lines for better readability using backslashes, like so:
+You can extend a single command over multiple lines for better readability using backslashes:
 
 ```shell
 ls --no-group \
@@ -64,11 +61,21 @@ ls --no-group \
   --size
 ```
 
+Bash supports a couple of command operators for specifying AND and OR logic:
+
+```shell
+# run command1 and, only if its successful, then run command2
+command1 && command2
+
+# run command1 and, only if it fails, then run command2
+command1 || command2
+```
+
 # Variables
 
-Variables in bash come in a few different flavors
+Variables in bash come in a couple of different flavors
 
-## Shell Variables
+### Shell Variables
 
 Shell variables are only available to the particular shell session or script in which they are created.
 
@@ -79,7 +86,7 @@ Naming conventions:
 - It is common to use all lowercase letters for normal shell variables
 - It is common to use all uppercase letters for "constants" (shell variables whose value should never change)
 
-Defining Variables:
+Defining Shell variables:
 
 ```shell
 # you can defne a shell variable by simply assigning a value to it
@@ -97,7 +104,7 @@ declare -a varName         # the -a declares an indexed array
 declare -A varName         # the -A declares an associative array
 ```
 
-Using Variables:
+Using Shell variables:
 
 ```shell
 # best practice is to always enclose variables with double-quotes
@@ -113,11 +120,37 @@ echo "${varname}_other_text"
 Assigning temporary values to variables:
 
 ```shell
-# in this example we are assigning values to variables in the same line where we run a command
+# you can assign values to variables in the same line that you run a command
 # these assignments take effect only for the duration of the specified command
 var1="value1" var2="value2" command
 ```
 
-## Environment Variables
+### Environment Variables
 
-## Local Variables
+Just like Shell variables, Environment variables can be used in the current shell session.  However, Environment variables also have the benefit of being usable in any child shells or processes that are created.
+
+Naming standards are the same as Shell variables, however it is common convention to use all uppercase letters for Environment variables.
+
+Defining Shell variables:
+
+```shell
+# method 1: first assign a value to a Shell variable, and then 'export' it into an Environment variable
+VAR_NAME="some value"
+export VAR_NAME
+
+# method 2: use the export command to create an Environment variable and assign a value at the same time
+export VAR_NAME="some value"
+
+# method 3: you can also use the declare command to create an Environment variable
+declare -x VAR_NAME="some value" # the -x tells declare to 'export' this variable
+```
+
+Environment variables can be used in the same exact way that you use Shell variables.
+
+### Local Variables
+
+Local variables are used within Shell Functions.  Please see the section about Functions for more info.
+
+# Shell Functions
+
+Shell Functions allow you to 
