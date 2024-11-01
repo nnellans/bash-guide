@@ -178,6 +178,28 @@ The `return` command is optional and is not required.
 - By default, a Shell function will return the exit code from the last command it runs
 - However, if you would like your function to return a specific exit code, then you can use `return` followed by a number.  For example, `return 1` would make your function return an exit code of 1
 
+Using (calling) Shell functions:
+
+```shell
+# treat a shell function just like any command and call it by name
+echo "testing 123"
+functionName
+```
+
+Use Positional Parameters to pass arguments to a Shell function:<br />(Positional Parameters will be discussed in more detail later)
+
+```shell
+# defining the function
+functionName () {
+  echo "$1"
+  echo "$2"
+  echo "$3"
+}
+
+# calling the function
+functionName "arg1" "arg2" "arg3"
+```
+
 ### Local Variables
 
 You can define and use Local variables inside your functions.
@@ -200,26 +222,4 @@ functionName () {
   declare var_name="Albert"
   echo "You can call me ${var_name}"
 }
-```
-
-Using (calling) Shell functions:
-
-```shell
-# treat a shell function just like any command and call it by name
-echo "testing 123"
-functionName
-```
-
-Use Positional Parameters to pass arguments to a Shell function:<br />(Positional Parameters will be discussed in more detail later)
-
-```shell
-# defining the function
-functionName () {
-  echo "$1"
-  echo "$2"
-  echo "$3"
-}
-
-# calling the function
-functionName "arg1" "arg2" "arg3"
 ```
