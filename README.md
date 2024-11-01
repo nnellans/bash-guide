@@ -215,7 +215,9 @@ Use Positional Parameters to pass arguments to a Shell function:<br />(Positiona
 ```shell
 # defining the function
 functionName () {
-  echo "$1 $2 $3"
+  echo "$1"
+  echo "$2"
+  echo "$3"
 }
 
 # calling the function
