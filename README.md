@@ -161,20 +161,22 @@ Defining Shell Functions:
 ```shell
 # method 1: this is the most compatible method
 nameForFunction () {
-  commands
-  commands
-  return # optional
+  command1
+  command2
+  return #optional
 }
 
 # method 2
 function nameForFunction {
-  commands
-  commands
-  return # optional
+  command1
+  command2
+  return #optional
 }
 ```
 
-The `return` command is optional and is not required.  However, if you would like your function to return a specific exit code, then you can use `return` followed by a number.  For example, `return 1` would make your function return an exit code of 1.
+The `return` command is optional and is not required.
+- By default, a Shell function will return the exit code from the last command it runs
+- However, if you would like your function to return a specific exit code, then you can use `return` followed by a number.  For example, `return 1` would make your function return an exit code of 1
 
 ### Local Variables
 
