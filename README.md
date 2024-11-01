@@ -18,7 +18,7 @@
 ---
 
 # Shebang
-All bash scripts should start with a shebang line at the top.  This line tells the kernel which interpreter to use when running the script.
+As a best practice, all bash scripts should start with a shebang line at the top.  This line tells the kernel which interpreter to use when running the script.
 
 Standard example:
 - This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
@@ -89,7 +89,7 @@ Naming conventions:
 Defining Shell variables:
 
 ```shell
-# you can defne a shell variable by simply assigning a value to it
+# you can define a shell variable by simply assigning a value to it
 # there must be no spaces between the end of the variable name, the equals sign, and the start of the value
 variable_name="Some value"
 
@@ -106,10 +106,10 @@ declare -A varName         # the -A declares an associative array
 
 Using Shell variables:
 
-```shell
-# best practice is to always enclose variables with double-quotes
-# the exception is when you need to use word splitting
+> [!NOTE]  
+> It is advisable to to always enclose variables with double-quotes, with the exception being when you need to use word splitting.
 
+```shell
 # you can use a variable by preceding it with a $ symbol
 echo "$varname"
 
@@ -131,7 +131,7 @@ Just like Shell variables, Environment variables can be used in the current shel
 
 Naming standards are the same as Shell variables, however it is common convention to use all uppercase letters for Environment variables.
 
-Defining Shell variables:
+Defining Environment variables:
 
 ```shell
 # method 1: first assign a value to a Shell variable, and then 'export' it into an Environment variable
@@ -145,12 +145,77 @@ export VAR_NAME="some value"
 declare -x VAR_NAME="some value" # the -x tells declare to 'export' this variable
 ```
 
-Environment variables can be used in the same exact way that you use Shell variables.
+Using Environment variables:
 
-### Local Variables
-
-Local variables are used within Shell Functions.  Please see the section about Functions for more info.
+Environment variables can be used in the same exact way Shell variables are used.
 
 # Shell Functions
 
-Shell Functions allow you to 
+Shell Functions allow you to define reusable blocks of code.
+
+Defining Shell Functions:
+
+> [!IMPORTANT]  
+> In your code, you must define your functions first before you can call them
+
+```shell
+# method 1: this is the most compatible method
+nameForFunction () {
+  commands
+  commands
+  return # optional
+}
+
+# method 2
+function nameForFunction {
+  commands
+  commands
+  return # optional
+}
+```
+
+The `return` command is optional and is not required.  However, if you would like your function to return a specific exit code, then you can use `return` followed by a number.  For example, `return 1` would make your function return an exit code of 1.
+
+### Local Variables
+
+You can define and use Local variables inside your functions.
+- Local variables are visible only to the function where they are defined, and its children
+- The names of Local variables will not conflict with any other global variables defined elsewhere
+  - This helps you to create portable functions
+ 
+Defining and using Local variables in a function:
+
+```shell
+# method 1: using the local command
+functionName () {
+  local var_name="Albert"
+  echo "You can call me ${var_name}"
+}
+
+# method 2: using the declare command
+# when used inside of a function, declare will always create local variables by default
+functionName () {
+  declare var_name="Albert"
+  echo "You can call me ${var_name}"
+}
+```
+
+Using (calling) Shell functions:
+
+```shell
+# treat a shell function just like any command and call it by name
+echo "testing 123"
+functionName
+```
+
+Use Positional Parameters to pass arguments to a Shell function:<br />(Positional Parameters will be discussed in more detail later)
+
+```shell
+# defining the function
+functionName () {
+  echo "$1 $2 $3"
+}
+
+# calling the function
+functionName "arg1" "arg2" "arg3"
+```
