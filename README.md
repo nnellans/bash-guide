@@ -254,11 +254,16 @@ functionName () {
 When you think of Aliases you should think of "nicknames".  You can create an Alias to represent a complicated command, or set of commands.  For example, if you were a Kubernetes admin you might run the following command often:  `kubectl get pods --namespace default --out wide`.  You could create an alias for this called `kgp`. After that, you can simply run `kgp` instead of that long command.
 
 ```shell
-# defining an alias
+# define an alias
 alias nameForAlias='commands;commands;commands'
 
 # remove an alias
 unalias nameForAlias
+
+# use an alias
+command1
+command2
+nameForAlias
 ```
 
 # Viewing Variables, Functions, and Aliases
