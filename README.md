@@ -17,7 +17,7 @@
 ---
 
 # Table of Contents
-- [Shebang](#shebang)
+- [Script File Basics](#script-file-basics)
 - [Commands](#commands)
 - [Variables](#variables)
   - [Shell Variables](#shell-variables)
@@ -28,9 +28,21 @@
 - [Standard Input, Output, and Error](#standard-input-output-and-error)
 
 ---
+# Script File Basics
 
-# Shebang
-As a best practice, all bash scripts should start with a shebang line at the top.  It tells the kernel which interpreter to use when running the script.
+Bash scripts are just text files. While they don't require a file extension, it's common for them to use the `.sh` file extension.
+
+### Comments
+Comments start with the `#` symbol
+
+```shell
+# this is a comment
+
+someCommand # comments can even go at the end of a command, as long as you have at least one space before the #
+```
+
+### Shebang
+All bash scripts should start with a shebang line at the top.  It tells the kernel which interpreter to use when running the script.
 
 Standard example:
 - ```shell
@@ -44,7 +56,18 @@ Portable (somewhat) version:
   ```
 - For portability reasons, it is commonly recommended to use a shebang like this
 - This version will run the first `bash` found in your `$PATH` variable
-- This also may not work for 100% of cases, because `env` may not always be found under `/usr/bin` on all systems
+- This also may not work for 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
+
+### Setting shell options
+
+The `set` command can be used to configure the shell.  Some common options are:
+- `set -x` enables debug mode, where commands and arguments are printed out as they are executed
+- `set -e` exits the script immediately if any command returns a non-zero exit status
+- `set -u` exits the script immediately if you try to use a variable that's undefined
+- `set -o pipefail`
+  - When piping commands together (`command1 | command2`) Bash will only return the exit status of the last command
+  - This `set` option tells Bash to return a non-zero exit status if ANY of the commands in the pipeline fail
+- Bash lets you combine short parameters together, so you can set all options at once with : `set -xeuo pipefail`
 
 ---
 
@@ -52,7 +75,7 @@ Portable (somewhat) version:
 
 There are multiple types of commands you can run within bash:
 1. Executables (like binaries and scripts)
-2. Shell built-ins
+2. Shell built-ins and keywords
 3. Shell functions
 4. Aliases
 
@@ -92,6 +115,16 @@ command1 && command2
 command1 || command2
 ```
 
+For better readability in scripts, consider using the long form of parameters, when available:
+
+```shell
+# instead of this
+du -ah
+
+# use this
+du --all --human-readable
+```
+
 ---
 
 # Variables
@@ -107,7 +140,7 @@ Naming conventions:
 - Must not start with a number
 - Names are case-sensitive, so `varname` is different than `VarName`
 - It is common to use all lowercase letters for normal shell variables
-- It is common to use all uppercase letters for "constants" (shell variables whose value should never change)
+- It is common to use all uppercase letters for "constants" (or, shell variables where the value never changes)
 
 Defining Shell variables:
 
@@ -120,11 +153,11 @@ variable_name="Some value"
 var1="value1" var2="value2" var3="value3"
 
 # another method is to use the declare command
-declare varName="value"
-declare -r varName="value" # the -r marks this variable as read-only (constant)
-declare -i varName=34527   # the -i marks this variable with the 'integer' attribute
-declare -a varName         # the -a declares an indexed array
-declare -A varName         # the -A declares an associative array
+declare var_name="value"
+declare -r var_name="value" # the -r marks this variable as read-only (constant)
+declare -i var_name=34527   # the -i marks this variable with the 'integer' attribute
+declare -a var_name         # the -a declares an indexed array
+declare -A var_name         # the -A declares an associative array
 ```
 
 Using Shell variables:
@@ -134,11 +167,11 @@ Using Shell variables:
 
 ```shell
 # you can use a variable by preceding it with a $ symbol
-echo "$varname"
+echo "$var_name"
 
 # optionally, you can add curly braces to the name
 # this is necessary if you have to do string concatenation
-echo "${varname}_other_text"
+echo "${var_name}plusSomeMoreText"
 ```
 
 Assigning temporary values to variables:
@@ -184,14 +217,14 @@ Defining Shell Functions:
 
 ```shell
 # method 1: this is the most compatible method
-nameForFunction () {
+name_of_function() {
   command1
   command2
   return #optional
 }
 
 # method 2
-function nameForFunction {
+function name_of_function {
   command1
   command2
   return #optional
@@ -208,21 +241,21 @@ Using (calling) Shell functions:
 # treat a shell function just like any command and call it by name
 command1
 command2
-functionName
+function_name
 ```
 
 Use Positional Parameters to pass arguments to a Shell function:<br />*(Positional Parameters will be discussed in more detail later)*
 
 ```shell
 # defining the function
-functionName () {
+function_name() {
   echo "$1"
   echo "$2"
   echo "$3"
 }
 
 # calling the function
-functionName "arg1" "arg2" "arg3"
+function_name "arg1" "arg2" "arg3"
 ```
 
 ### Local Variables
@@ -236,14 +269,14 @@ Defining and using Local variables in a function:
 
 ```shell
 # method 1: using the local command
-functionName () {
+function_name() {
   local var_name="Albert"
   echo "You can call me ${var_name}"
 }
 
 # method 2: using the declare command
 # when used inside of a function, declare will create local variables by default
-functionName () {
+function_name() {
   declare var_name="Albert"
   echo "You can call me ${var_name}"
 }
@@ -255,15 +288,15 @@ When you think of Aliases you should think of "nicknames".  You can create an Al
 
 ```shell
 # define an alias
-alias nameForAlias='commands;commands;commands'
+alias name_of_alias='commands;commands;commands'
 
 # remove an alias
-unalias nameForAlias
+unalias name_of_alias
 
 # use an alias
 command1
 command2
-nameForAlias
+alias_name
 ```
 
 # Viewing Variables, Functions, and Aliases
@@ -306,7 +339,7 @@ token
 # method 3b: you can indent a Here Document for better readability
 # use <<- instead of <<
 # the body of text can be indented with tab characters only (not spaces)
-# be careful with how your text editor treats tabs & spaces
+# be careful with how your text editor treats tabs vs. spaces
 command1 <<- token
     indented line of text
     another line of text
@@ -357,3 +390,8 @@ command > file.txt 2>&1
 command &> file.txt  # overwrite
 command &>> file.txt # append
 ```
+
+---
+
+# If Statements
+
