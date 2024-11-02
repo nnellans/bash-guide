@@ -44,7 +44,7 @@ Portable (somewhat) version:
   ```
 - For portability reasons, it is commonly recommended to use a shebang like this
 - This version will run the first `bash` found in your `$PATH` variable
-- This may not work for 100% of cases either, because `env` may not always be found under `/usr/bin` on all systems
+- This also may not work for 100% of cases, because `env` may not always be found under `/usr/bin` on all systems
 
 ---
 
