@@ -1,4 +1,4 @@
-# Bash Guide
+# Bash Scripting Guide
 
 - Version: 0.0.1
 - Author:
@@ -8,7 +8,6 @@
     - https://www.nathannellans.com
     - https://github.com/nnellans/bash-guide
 
-
 > [!IMPORTANT]
 > This is an advanced guide and assumes you already know the basics of Bash.  Think of this more like an advanced cheat sheet.  I went through various sources, captured any notes that I felt were important, and organized them into the README file you see here.
 
@@ -17,21 +16,36 @@
 
 ---
 
+# Table of Contents
+- [Shebang](#shebang)
+- [Commands](#commands)
+- [Variables](#variables)
+  - [Shell Variables](#shell-variables)
+  - [Environment Variables](#environment-variables)
+- [Shell Functions](#shell-functions)
+  - [Local Variables](#local-variables)
+- [Aliases](#aliases)
+
+---
+
 # Shebang
-As a best practice, all bash scripts should start with a shebang line at the top.  This line tells the kernel which interpreter to use when running the script.
+As a best practice, all bash scripts should start with a shebang line at the top.  It tells the kernel which interpreter to use when running the script.
 
 Standard example:
-- This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
 - ```shell
   #!/bin/bash
   ```
+- This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
+
 Portable (somewhat) version:
-- For portability reasons, it is commonly recommended to use a shebang like this
-- This version will run the first `bash` found in your `$PATH` variable
-- This may not work for 100% of cases either, because `env` may not always be found under `/usr/bin` on all systems
 - ```shell
   #!/usr/bin/env bash
   ```
+- For portability reasons, it is commonly recommended to use a shebang like this
+- This version will run the first `bash` found in your `$PATH` variable
+- This may not work for 100% of cases either, because `env` may not always be found under `/usr/bin` on all systems
+
+---
 
 # Commands
 
@@ -71,6 +85,8 @@ command1 && command2
 command1 || command2
 ```
 
+---
+
 # Variables
 
 Variables in bash come in a couple of different flavors
@@ -107,13 +123,14 @@ declare -A varName         # the -A declares an associative array
 Using Shell variables:
 
 > [!NOTE]  
-> It is advisable to to always enclose variables with double-quotes, with the exception being when you need to use word splitting.
+> It is advisable to always enclose variables with double-quotes, with the exception being when you need to use word splitting.
 
 ```shell
 # you can use a variable by preceding it with a $ symbol
 echo "$varname"
 
-# optionally, you can add curly braces to the name to help with string concatenation
+# optionally, you can add curly braces to the name
+# this is necessary if you have to do string concatenation
 echo "${varname}_other_text"
 ```
 
@@ -222,4 +239,19 @@ functionName () {
   declare var_name="Albert"
   echo "You can call me ${var_name}"
 }
+```
+
+# Aliases
+
+When you think of Aliases you should think of "nicknames".  You can create an Alias to represent a complicated command, or set of commands.  For example, if you were a Kubernetes admin you might run the following command often:  `kubectl get pods --namespace default --out wide`.  You could create an alias for this called `kgp`. After that, you can simply run `kgp` instead of that long command.
+
+```shell
+# defining an alias
+alias nameForAlias='commands;commands;commands'
+
+# remove an alias
+unalias nameForAlias
+
+# view all aliases defined in the environment
+alias
 ```
