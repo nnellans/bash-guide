@@ -242,7 +242,7 @@ functionName () {
 }
 
 # method 2: using the declare command
-# when used inside of a function, declare will always create local variables by default
+# when used inside of a function, declare will create local variables by default
 functionName () {
   declare var_name="Albert"
   echo "You can call me ${var_name}"
@@ -259,9 +259,6 @@ alias nameForAlias='commands;commands;commands'
 
 # remove an alias
 unalias nameForAlias
-
-# view all aliases defined in the environment
-alias
 ```
 
 # Viewing Variables, Functions, and Aliases
