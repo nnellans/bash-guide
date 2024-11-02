@@ -25,6 +25,7 @@
 - [Shell Functions](#shell-functions)
   - [Local Variables](#local-variables)
 - [Aliases](#aliases)
+- [Standard Input, Output, and Error](#standard-input-output-and-error)
 
 ---
 
@@ -55,7 +56,7 @@ There are multiple types of commands you can run within bash:
 3. Shell functions
 4. Aliases
 
-How to get information & help on commands:
+I created the graphic below to highlight how you can get information & help on the 4 types of commands:
 
 ![](images/bash-commands.png)
 
@@ -199,11 +200,12 @@ Using (calling) Shell functions:
 
 ```shell
 # treat a shell function just like any command and call it by name
-echo "testing 123"
+command1
+command2
 functionName
 ```
 
-Use Positional Parameters to pass arguments to a Shell function:<br />(Positional Parameters will be discussed in more detail later)
+Use Positional Parameters to pass arguments to a Shell function:<br />*(Positional Parameters will be discussed in more detail later)*
 
 ```shell
 # defining the function
@@ -221,7 +223,7 @@ functionName "arg1" "arg2" "arg3"
 
 You can define and use Local variables inside your functions.
 - Local variables are visible only to the function where they are defined, and its children
-- The names of Local variables will not conflict with any other global variables defined elsewhere
+- The names of Local variables will not conflict with other global variables defined elsewhere
   - This helps you to create portable functions
  
 Defining and using Local variables in a function:
@@ -258,6 +260,92 @@ alias
 
 # Viewing Variables, Functions, and Aliases
 
+If you want to view all of the Shell variables, Environment variables, Functions, and Aliases that are currently defined in your environment, then there are several commands you can run to find that info. Below, you'll see a graphic I created that shows which commands to run, and what information each one will return.
+
 ![](images/bash-environment.png)
 
 ---
+
+# Standard Input, Output, and Error
+
+Standard Input (`stdin`), Standard Output (`stdout`), and Standard Error (`stderr`) are streams of information that a command can use.
+
+| Stream | Purpose | Default | File Descriptor |
+| --- | --- | --- | --- |
+| `stdin` | Feed data into a command | keyboard | `0` |
+| `stdout` | Output data from a command | screen | `1` |
+| `stderr` | Output errors from a comamnd | screen | `2` |
+
+### Redirecting Standard Input
+
+```shell
+# method 1: run command1 first and "pipe" its output into command2's standard input
+command1 | command2
+
+# method 2: take the contents of file.txt and feed it into command1's standard input
+command1 < file.txt
+
+# method 3a: feed a whole body of text into command1's standard input
+# this is known as a "Here Document"
+# the starting and ending "token" should not be found anywhere else in the given body of text
+# it is common to use the following token:  _EOF_
+command1 << token
+line of text
+another line of text
+last line for now
+token
+
+# method 3b: you can indent a Here Document for better readability
+# use <<- instead of <<
+# the body of text can be indented with tab characters only (not spaces)
+# be careful with how your text editor treats tabs & spaces
+command1 <<- token
+    indented line of text
+    another line of text
+    last line for now
+token
+
+# method 4: feed a single line of text into command1's standard input
+# this is known as a "Here String"
+command1 <<< "line of text"
+```
+
+### Redirecting Standard Output
+
+```shell
+# write stdout to a file
+command > file.txt  # overwrite
+command >> file.txt # append
+
+# suppress stdout by redirecting to /dev/null
+command > /dev/null
+```
+
+### Redirecting Standard Error
+
+Remember, the shell references `stderr` by its file descriptor of `2`
+
+```shell
+# write stderr to a file
+command 2> file.txt  # overwrite
+command 2>> file.txt # append
+
+# suppress stderr by redirecting to /dev/null
+command 2> /dev/null
+```
+
+### Redirecting stdout & stderr to the same file
+
+Remember, the shell references `stdout` and `stderr` by file descriptors `1` and `2`, respectively
+
+```shell
+# method 1: the traditional & most compatible way
+# this statement contains 2 redirections, and they must be in this order
+# first, redirect stdout to a file
+# second, redirect stderr to stdout
+command > file.txt 2>&1
+
+# method 2: streamlined method that works in newer versions of Bash
+command &> file.txt  # overwrite
+command &>> file.txt # append
+```
