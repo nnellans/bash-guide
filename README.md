@@ -76,6 +76,12 @@ ls --no-group \
   --size
 ```
 
+You can send the output from command1 to the input of command2 using a pipe
+
+```shell
+command1 | command2
+```
+
 Bash supports a couple of command operators for specifying AND and OR logic:
 
 ```shell
