@@ -255,3 +255,9 @@ unalias nameForAlias
 # view all aliases defined in the environment
 alias
 ```
+
+# Viewing Variables, Functions, and Aliases
+
+![](images/bash-environment.png)
+
+---
