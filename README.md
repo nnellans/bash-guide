@@ -14,6 +14,9 @@
 > [!WARNING]
 > This is a live document.  Some of the sections are still a work in progress.  I will be continually updating it over time.
 
+> [!TIP]
+> I will use "tips" to reference something that I've taken from Google's [Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
+
 ---
 
 # Table of Contents
@@ -336,9 +339,8 @@ another line of text
 last line for now
 token
 
-# method 3b: you can indent a Here Document for better readability
-# use <<- instead of <<
-# the body of text can be indented with tab characters only (not spaces)
+# method 3b: using <<- instead of << lets you indent a Here Document for better readability
+# only tab characters are supported, not spaces
 # be careful with how your text editor treats tabs vs. spaces
 command1 <<- token
     indented line of text
@@ -395,3 +397,34 @@ command &>> file.txt # append
 
 # If Statements
 
+```shell
+if conditional; then
+  commands
+elif conditional; then
+  commands
+else
+  commands
+fi
+```
+
+> [!TIP]
+> Put the `; then` at the end of the same line that contains `if` or `elif`
+
+- `conditional` is actually a command, or set of commands, that will return either true or false to `if` or `elif`
+- `elif` and `else` are optional, only use them if you need to
+
+### True or False
+- Bash handles true or false differently (backwards) from most programming languages
+- In Bash, true=`0` and false=not `0`
+
+### Conditionals
+There are multiple ways to write your conditional expression. Three of those ways will be explored below
+
+> [!TIP]
+> `[[ ... ]]` is preferred over `test` and `[ ... ]`
+
+### Conditional: the `test` and `[ ... ]` commands
+
+### Conditional: the `[[ ... ]]` commands
+
+### Conditional: the `(( ... ))` commands
