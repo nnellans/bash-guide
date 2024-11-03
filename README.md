@@ -15,7 +15,7 @@
 > This is a live document.  Some of the sections are still a work in progress.  I will be continually updating it over time.
 
 > [!TIP]
-> I will use "tips" to reference something that I've taken from Google's [Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
+> Google's [Shell Style Guide](https://google.github.io/styleguide/shellguide.html) has many great recommendations and best practices that I also agree with.  When you see me use `GSG:` that means the following recommendation will be coming from Google's Style Guide.
 
 ---
 
@@ -41,22 +41,20 @@ Comments start with the `#` symbol
 ```shell
 # this is a comment
 
-someCommand # comments can even go at the end of a command, as long as you have at least one space before the #
+echo "something" # comments can be after a command, as long as you have at least one space before the #
 ```
+
+> GSG: Don't comment everything. Comment tricky, non-obvious, interesting or important parts of your code.
 
 ### Shebang
 All bash scripts should start with a shebang line at the top.  It tells the kernel which interpreter to use when running the script.
 
 Standard example:
-- ```shell
-  #!/bin/bash
-  ```
+- `#!/bin/bash`
 - This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
 
 Portable (somewhat) version:
-- ```shell
-  #!/usr/bin/env bash
-  ```
+- `#!/usr/bin/env bash`
 - For portability reasons, it is commonly recommended to use a shebang like this
 - This version will run the first `bash` found in your `$PATH` variable
 - This also may not work for 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
@@ -102,13 +100,23 @@ ls --no-group \
   --size
 ```
 
+> GSG: You should try to keep your lines to 80 characters max
+
 You can send the output from command1 to the input of command2 using a pipe
 
 ```shell
 command1 | command2
 ```
 
-Bash supports a couple of command operators for specifying AND and OR logic:
+> GSG: If you can fit a whole pipeline on 1 line, then do it. If not, then use multiple lines and put each segment on its own line:
+>
+> ```shell
+> command1 \
+>   | command2 \
+>   | command3
+> ```
+
+Bash supports a couple of logical command operators for specifying AND and OR logic:
 
 ```shell
 # run command1 and, only if its successful, then run command2
@@ -121,11 +129,8 @@ command1 || command2
 For better readability in scripts, consider using the long form of parameters, when available:
 
 ```shell
-# instead of this
-du -ah
-
-# use this
-du --all --human-readable
+du --all --human-readable  # use this
+du -ah                     # instead of this
 ```
 
 ---
@@ -142,8 +147,10 @@ Naming conventions:
 - May contain letters, numbers, and underscores
 - Must not start with a number
 - Names are case-sensitive, so `varname` is different than `VarName`
-- It is common to use all lowercase letters for normal shell variables
-- It is common to use all uppercase letters for "constants" (or, shell variables where the value never changes)
+
+> GSG:
+> - Shell variables should use all lowercase letters, with underscores to separate words
+> - Constant variables (read-only) should use all uppercase letters, with underscores to separate words
 
 Defining Shell variables:
 
@@ -161,12 +168,14 @@ declare -r var_name="value" # the -r marks this variable as read-only (constant)
 declare -i var_name=34527   # the -i marks this variable with the 'integer' attribute
 declare -a var_name         # the -a declares an indexed array
 declare -A var_name         # the -A declares an associative array
+
+# yet another way to mark a variable as readonly
+readonly var_name="value"
 ```
 
-Using Shell variables:
+> GSG: For sake of clarity use `readonly` instead of `declare -r`
 
-> [!NOTE]  
-> It is advisable to always enclose variables with double-quotes, with the exception being when you need to use word splitting.
+Using Shell variables:
 
 ```shell
 # you can use a variable by preceding it with a $ symbol
@@ -176,6 +185,12 @@ echo "$var_name"
 # this is necessary if you have to do string concatenation
 echo "${var_name}plusSomeMoreText"
 ```
+
+> GSG:
+> - Always double-quote strings containing variables
+> - Prefer `${var_name}` over `$var_name`, except:
+>   - Don't use braces for special variables like `$@` or `$!`, unless strictly necessary
+>   - Don't use braces for the first 10 positional parameters like `$0` and `$6`
 
 Assigning temporary values to variables:
 
@@ -189,7 +204,9 @@ var1="value1" var2="value2" command
 
 Just like Shell variables, Environment variables can be used in the current shell session.  However, Environment variables also have the benefit of being usable in any child shells or processes that are created.
 
-Naming standards are the same as Shell variables, however it is common convention to use all uppercase letters for Environment variables.
+Environment variables use the same naming standards as Shell variables
+
+> GSG: Environment variables should use all uppercase letters, with underscores to separate words
 
 Defining Environment variables:
 
@@ -205,9 +222,11 @@ export VAR_NAME="some value"
 declare -x VAR_NAME="some value" # the -x tells declare to 'export' this variable
 ```
 
+> GSG: For sake of clarity use `export` instead of `declare -x`
+
 Using Environment variables:
 
-Environment variables can be used in the same exact way Shell variables are used.
+Environment variables are used the same way Shell variables are used.
 
 # Shell Functions
 
@@ -217,6 +236,8 @@ Defining Shell Functions:
 
 > [!IMPORTANT]  
 > In your code, you must define your functions first before you can call them
+
+Environment variables use the same naming standards as Shell variables
 
 ```shell
 # method 1: this is the most compatible method
@@ -233,6 +254,10 @@ function name_of_function {
   return #optional
 }
 ```
+
+> GSG:
+> - The opening `{` must be on the same line as the function name
+> - No space between the function name and `()`
 
 The `return` command is optional and is not required.
 - By default, a Shell function will return the exit code from the last command it runs
@@ -271,7 +296,7 @@ You can define and use Local variables inside your functions.
 Defining and using Local variables in a function:
 
 ```shell
-# method 1: using the local command
+# method 1: using the local command. this is the preferred method
 function_name() {
   local var_name="Albert"
   echo "You can call me ${var_name}"
@@ -285,9 +310,21 @@ function_name() {
 }
 ```
 
+> GSG: Do not use local to create a variable and give it a value from command substitution in the same line. The  `local` command does not propagate the exit code from the command substitution.
+> ```shell
+> # bad example
+> local var_name="$(someCommand)" # this will return the exit code from local, not the command substitution
+>
+> # correct way
+> local var_name
+> var_name="$(someCommand)"
+> ```
+
 # Aliases
 
 When you think of Aliases you should think of "nicknames".  You can create an Alias to represent a complicated command, or set of commands.  For example, if you were a Kubernetes admin you might run the following command often:  `kubectl get pods --namespace default --out wide`.  You could create an alias for this called `kgp`. After that, you can simply run `kgp` instead of that long command.
+
+> GSG: Aliases should be avoided in scripts. For almost every purpose, shell functions are preferred over aliases.
 
 ```shell
 # define an alias
@@ -304,15 +341,13 @@ alias_name
 
 # Viewing Variables, Functions, and Aliases
 
-If you want to view all of the Shell variables, Environment variables, Functions, and Aliases that are currently defined in your environment, then there are several commands you can run to find that info. Below, you'll see a graphic I created that shows which commands to run, and what information each one will return.
+There are multiple commands to view all of the Shell variables, Environment variables, Functions, and Aliases that are currently defined in your environment. Below, you'll see a graphic I created that shows some of those commands, and what information each one will return.
 
 ![](images/bash-environment.png)
 
 ---
 
 # Standard Input, Output, and Error
-
-Standard Input (`stdin`), Standard Output (`stdout`), and Standard Error (`stderr`) are streams of information that a command can use.
 
 | Stream | Purpose | Default | File Descriptor |
 | --- | --- | --- | --- |
@@ -329,9 +364,8 @@ command1 | command2
 # method 2: take the contents of file.txt and feed it into command1's standard input
 command1 < file.txt
 
-# method 3a: feed a whole body of text into command1's standard input
-# this is known as a "Here Document"
-# the starting and ending "token" should not be found anywhere else in the given body of text
+# method 3a: Here Document: feed a whole body of text into command1's standard input
+# the "token" should not be found anywhere else in the given body of text
 # it is common to use the following token:  _EOF_
 command1 << token
 line of text
@@ -340,16 +374,14 @@ last line for now
 token
 
 # method 3b: using <<- instead of << lets you indent a Here Document for better readability
-# only tab characters are supported, not spaces
-# be careful with how your text editor treats tabs vs. spaces
+# only tab characters are supported (not spaces), be careful with how your text editor treats tabs vs. spaces
 command1 <<- token
     indented line of text
     another line of text
     last line for now
 token
 
-# method 4: feed a single line of text into command1's standard input
-# this is known as a "Here String"
+# method 4: Here String: feed a single line of text into command1's standard input
 command1 <<< "line of text"
 ```
 
@@ -360,13 +392,15 @@ command1 <<< "line of text"
 command > file.txt  # overwrite
 command >> file.txt # append
 
+# redirect stdout to stderr
+command 1>&2  # full form
+command >&2   # stdout (file descriptor 1) is assumed, so the 1 can be omitted
+
 # suppress stdout by redirecting to /dev/null
 command > /dev/null
 ```
 
 ### Redirecting Standard Error
-
-Remember, the shell references `stderr` by its file descriptor of `2`
 
 ```shell
 # write stderr to a file
@@ -378,8 +412,6 @@ command 2> /dev/null
 ```
 
 ### Redirecting stdout & stderr to the same file
-
-Remember, the shell references `stdout` and `stderr` by file descriptors `1` and `2`, respectively
 
 ```shell
 # method 1: the traditional & most compatible way
@@ -407,24 +439,130 @@ else
 fi
 ```
 
-> [!TIP]
-> Put the `; then` at the end of the same line that contains `if` or `elif`
+> GSG: Put `; then` at the end of the same line that contains `if` or `elif`
 
-- `conditional` is actually a command, or set of commands, that will return either true or false to `if` or `elif`
+- `conditional` can be any command, or set of commands, that will return an exit code
+  - Bash handles true or false differently from most programming languages, it treats true as `0` and false as not `0`
 - `elif` and `else` are optional, only use them if you need to
+- There are multiple ways to write your conditional expression. Three of those ways will be explored below
 
-### True or False
-- Bash handles true or false differently (backwards) from most programming languages
-- In Bash, true=`0` and false=not `0`
+### Conditional 1: the `test` and `[ … ]` commands
 
-### Conditionals
-There are multiple ways to write your conditional expression. Three of those ways will be explored below
+The `test` command comes in 2 different forms:
 
-> [!TIP]
-> `[[ ... ]]` is preferred over `test` and `[ ... ]`
+```shell
+# less common form
+test expression
 
-### Conditional: the `test` and `[ ... ]` commands
+# widely used form
+[ expression ]
+```
 
-### Conditional: the `[[ ... ]]` commands
+`test` supports a few logical operators for its expressions:
 
-### Conditional: the `(( ... ))` commands
+```shell
+[ ! expression1 ]               # expression1 does NOT succeed
+[ expression1 -a expression2 ]  # both expression1 AND expression2 succeeds
+[ expression1 -o expression2 ]  # either expression1 OR expression2 succeeds
+```
+
+`test` has many different types of tests. I will highlight some of them below. This is by no means an exhaustive list.
+
+```shell
+# file-based expressions
+[ -e file_name ]        # the given file exists
+[ -f file_name ]        # the given file exists as a regular file
+[ -d dir_name ]         # the given file exists as a directory
+
+# string-based expressions
+[ string ]              # the given string's length is greater than 0
+[ -n string ]           # same as above. this is the preferred form
+[ -z string ]           # the given string's length is 0
+[ string1 = string2 ]   # string1 is equal to string2. don't use this form, as it can be confused with assignment
+[ string1 == string2 ]  # same as above. this is the preferred form
+[ string1 != string2 ]  # string1 is not equal to string2
+
+# integer-based expressions
+[ int1 -eq int2 ]       # int1 is equal to int2
+[ int1 -ne int2 ]       # int1 is not equal to int2
+[ int1 -gt int2 ]       # int1 is greater than int2
+[ int1 -ge int2 ]       # int1 is greater than or equal to int2
+[ int1 -lt int2 ]       # int1 is less than int2
+[ int1 -le int2 ]       # int1 is less than or equal to int2
+```
+
+### Conditional 2: the `[[ … ]]` commands
+
+`[[ … ]]` is the enhanced replacement for `test`.
+
+> GSG:
+> - `[[ … ]]` is preferred over `test` and `[ … ]`
+> - For preference, don’t use `[[ … ]]` at all for numeric comparisons, use `(( … ))` instead.
+
+`[[ … ]]` supports everything that `test` supports, with a few notable changes and additions:
+
+Changes to logical operators:
+
+```shell
+# for AND, instead of using -a use &&
+[[ command1 && command2 ]]
+
+# for OR, instead of using -o use ||
+[[ command1 || command2 ]]
+```
+
+Newly added expressions:
+
+```shell
+# test if a string matches a regular expression
+[[ string =~ regexPattern ]]
+
+# test if a string matches (or not) a pattern
+# uses the same pattern syntax as pathname expansion
+[[ string == "foo*" ]]
+[[ string != "bar*" ]]
+```
+
+### Conditional 3: the `(( … ))` commands
+
+`(( … ))` only supports arithmetic expressions.
+
+> GSG: Always use `(( … ))` rather than `let` or `expr`
+
+`(( … ))` supports a few logical operators for its expressions:
+
+```shell
+(( ! expression1 ))               # expression1 does NOT succeed
+(( expression1 && expression2 ))  # both expression1 AND expression2 succeeds
+(( expression1 || expression2 ))  # either expression1 OR expression2 succeeds
+```
+
+`(( … ))` also supports a ternary conditional operator
+
+```shell
+# test expression1 first. if successful, THEN test expression2. ELSE if it fails, then test expression3
+# will return the exit status from expression2 or 3 (whichever one gets tested)
+(( expression1 ? expression2 : expression3 ))
+```
+
+`(( … ))` supports many types of arithmetic expressions. The following is NOT an exhaustive list.
+
+```shell
+# comparison expressions
+(( int1 == int2 ))          # equal to
+(( int1 != int2 ))          # not equal to
+(( int1 < int2 ))           # less than
+(( int1 <= int2 ))          # less than or equal to
+(( int1 > int2 ))           # greater than
+(( int1 >= int2 ))          # greater than or equal to
+
+# arithmetic expressions. these examples all use ==, but any comparison operator above is supported
+(( int1 + int2 == int3 ))   # addition
+(( int1 - int2 == int3 ))   # subtraction
+(( int1 * int2 == int3 ))   # multiplication
+(( int1 / int2 == int3 ))   # division
+(( int1 % int2 == int3 ))   # remainder / modulo
+(( int1 ** int2 == int3 ))  # exponentiation / power of
+```
+
+> GSG: Be careful of running `(( … ))` standalone. If an expression evaluates to `0`, like `(( 5 - 5 ))`, then the exit code will actually be `1`. This exit status can be considered failure, and might cause your script to exit.
