@@ -44,10 +44,8 @@ Comments start with the `#` symbol
 echo "something" # comments can be after a command, as long as you have at least one space before the #
 ```
 
-> GSG: Don't comment everything. Comment tricky, non-obvious, interesting or important parts of your code.
-
 ### Shebang
-All bash scripts should start with a shebang line at the top.  It tells the kernel which interpreter to use when running the script.
+This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
 
 Standard example:
 - `#!/bin/bash`
@@ -565,4 +563,33 @@ Newly added expressions:
 (( int1 ** int2 == int3 ))  # exponentiation / power of
 ```
 
-> GSG: Be careful of running `(( … ))` standalone. If an expression evaluates to `0`, like `(( 5 - 5 ))`, then the exit code will actually be `1`. This exit status can be considered failure, and might cause your script to exit.
+# Case Statements
+
+By default, when it finds the first match it will run the given commands and then exit, with no subsequent matches being attempted.  This behavior can be modified by changing `;;` to a different option, but see the `GSG` note below
+- It is common to use `*` as the final, fallback pattern as this will always match
+- You can define multiple patterns on the same clause using an OR logical operator of `|`
+
+```shell
+case expressionToMatch in
+  pattern1)
+    commands
+    ;;
+  pattern2|pattern3)
+    commands
+    ;;
+  *)
+    commands
+    ;;
+esac
+
+# using single-line clauses
+case expressionToMatch in
+  pattern1) command ;;
+  pattern2) command ;;
+  *) command ;;
+esac
+```
+
+> GSG:
+> - Try to always use `;;` and avoid the alternative `;&` and `;;&` notations
+> - For single-line clauses, put a space after the closing `)` of pattern, as well as a space before the ending `;;`
