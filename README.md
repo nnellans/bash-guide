@@ -639,3 +639,11 @@ esac
 > GSG:
 > - Try to always use `;;` and avoid the alternative `;&` and `;;&` notations
 > - For single-line clauses, put a space after the closing `)` of pattern, as well as a space before the ending `;;`
+
+# While Loops
+
+# Until Loops
+
+# For Loops
+
+# Shell Expansions
