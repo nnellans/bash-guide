@@ -36,12 +36,14 @@
   - [Redirecting Standard Input](#redirecting-standard-input)
   - [Redirecting Standard Output](#redirecting-standard-output)
   - [Redirecting Standard Error](#redirecting-standard-error)
-  - [Redirecting stdout & stderr to the same file](#redirecting-stdout--stderr-to-the-same-file))
+  - [Redirecting stdout & stderr together](#redirecting-stdout--stderr-to-the-same-file))
+- [Pattern Matching](#pattern-matching)
 - [If Statements](#if-statements)
-  - [Conditional 1: the test and [ ] commands](#conditional-1-the-test-and----commands)
-  - [Conditional 2: the \[\[ \]\] commands](#conditional-2-the----commands)
-  - [Conditional 3: the (( )) commands](#conditional-3-the----commands)
+  - [test and [ ] commands](#conditional-1-the-test-and----commands)
+  - [\[\[ \]\] commands](#conditional-2-the----commands)
+  - [(( )) commands](#conditional-3-the----commands)
 - [Case Statements](#case-statements)
+- 
 
 ---
 # Script File Basics
@@ -437,6 +439,40 @@ command &>> file.txt  # append
 
 ---
 
+# Pattern Matching
+
+Pattern Matching is important to understand as it will be used by conditionals (`if` & `case`) as well as the various types of Shell Expansions.
+
+Here are some examples of the special characters and classes used by Pattern Matching:
+
+```shell
+*  # matches any string, including null
+?  # matches any single character
+
+[abcABC123]  # matches any one of the characters from the enclosed set
+[D-H3-8]     # matches any one of the characters from the enclosed ranges
+
+[!abc]       # negation, matches any character NOT from the enclosed set
+[^abc]       # also negation, matches any character NOT from the enclosed set
+
+[-abc]       # match a literal - character by including it first or last
+[abc-]       # match a literal - character by including it first or last
+
+# matches any character belonging to the given class
+# this is not an exhaustive list of classes
+[[:alnum:]]
+[[:alpha:]]
+[[:ascii:]]
+[[:blank:]]
+[[:digit:]]
+[[:word:]]
+
+# negation, matches any character NOT belonging to the given class
+[![:alpha:]]
+```
+
+---
+
 # If Statements
 
 ```shell
@@ -493,6 +529,7 @@ test expression
 [ string1 != string2 ]  # string1 is not equal to string2
 
 # integer-based expressions
+# GSG: for numeric comparisons you should really use (( ... )) instead
 [ int1 -eq int2 ]       # int1 equal to int2
 [ int1 -ne int2 ]       # int1 not equal to int2
 [ int1 -gt int2 ]       # int1 greater than int2
@@ -505,9 +542,7 @@ test expression
 
 `[[ … ]]` is the enhanced replacement for `test`.
 
-> GSG:
-> - `[[ … ]]` is preferred over `test` and `[ … ]`
-> - For preference, don’t use `[[ … ]]` at all for numeric comparisons, use `(( … ))` instead.
+> GSG: `[[ … ]]` is preferred over `test` and `[ … ]`
 
 `[[ … ]]` supports everything that `test` supports, with a few notable changes and additions:
 
@@ -528,7 +563,6 @@ Newly added expressions:
 [[ string =~ regexPattern ]]
 
 # test if a string matches (or not) a pattern
-# uses the same pattern syntax as pathname expansion
 [[ string == pattern ]]
 [[ string != pattern ]]
 ```
@@ -539,7 +573,7 @@ Newly added expressions:
 
 > GSG: Always use `(( … ))` rather than `let` or `expr`
 
-`(( … ))` supports a few logical operators for its expressions:
+`(( … ))` supports the following logical operators for its expressions:
 
 ```shell
 (( ! expression1 ))               # expression1 does NOT succeed
@@ -586,7 +620,7 @@ case expressionToMatch in
   pattern1)
     commands
     ;;
-  pattern2|pattern3)
+  pattern2 | pattern3)
     commands
     ;;
   *)
