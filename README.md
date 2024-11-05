@@ -33,11 +33,15 @@
 - [Aliases](#aliases)
 - [Viewing Variables, Functions, and Aliases](#viewing-variables-functions-and-aliases)
 - [Standard Input, Output, and Error](#standard-input-output-and-error)
-  - [Redirecting Standard Input](#redirecting-standard-input)
-  - [Redirecting Standard Output](#redirecting-standard-output)
-  - [Redirecting Standard Error](#redirecting-standard-error)
-  - [Redirecting stdout & stderr together](#redirecting-stdout--stderr-to-the-same-file))
 - [Pattern Matching](#pattern-matching)
+- [Shell Expansions](#shell-expansions)
+  - [Brace Expansion](#brace-expansion)
+  - [Tilde Expansion](#tilde-expansion)
+  - [Parameter Expansion](#parameter-expansion)
+  - [Command Substitution](#command-substitution)
+  - [Arithmetic Expansion](#arithmetic-expansion)
+  - [Word Splitting](#word-splitting)
+  - [Filename Expansion](#filename-expansion)
 - [If Statements](#if-statements)
   - [test and [ ] commands](#conditional-1-the-test-and----commands)
   - [\[\[ \]\] commands](#conditional-2-the----commands)
@@ -56,7 +60,7 @@ Comments start with the `#` symbol.
 
 ```shell
 # this is a comment
-echo "something" # comments can be after a command, as long as you have at least one space before the #
+echo "something" # comments can also go after a command, must have at least one space before the #
 ```
 
 ### Shebang
@@ -163,14 +167,14 @@ Naming conventions:
 - Names are case-sensitive, so `varname` is different than `VarName`
 
 > GSG:
-> - Shell variables should use all lowercase letters, with underscores to separate words
-> - Constant variables (read-only) should use all uppercase letters, with underscores to separate words
+> - Shell variable names should use all lowercase letters, with underscores to separate words
+> - Constant (read-only) variable names should use all uppercase letters, with underscores to separate words
 
 Defining Shell variables:
 
 ```shell
 # just assign a value to it
-# there must be no spaces between the end of the variable name, the equals sign, and the start of the value
+# must be no spaces between the end of the variable name, the equals sign, and the start of the value
 variable_name="Some value"
 
 # define multiple variables on the same line
@@ -192,7 +196,7 @@ readonly var_name="value"
 Using Shell variables:
 
 ```shell
-# you can use a variable by preceding it with a $ symbol
+# you can use a variable by preceding its name with a $ symbol
 echo "$var_name"
 
 # curly braces are optional (but also see the GSG: note below)
@@ -220,7 +224,7 @@ Just like Shell variables, Environment variables can be used in the current shel
 
 Naming standards: same as Shell variables
 
-> GSG: Environment variables should use all uppercase letters, with underscores to separate words
+> GSG: Environment variable names should use all uppercase letters, with underscores to separate words
 
 Defining Environment variables:
 
@@ -268,7 +272,7 @@ function name_of_function {
 ```
 
 > GSG:
-> - The opening `{` must be on the same line as the function name
+> - The opening `{` should be on the same line as the function name
 > - There should be no space between the function name and `()`
 
 The `return` command is optional and is not required.
@@ -322,7 +326,7 @@ function_name() {
 }
 ```
 
-> GSG: Don't use `local` to create a variable and give it a value from command substitution in the same line. The  `local` command does not propagate the exit code from the command substitution.
+> GSG: Don't use `local` to create a variable and give it a value (using command substitution) in the same line. The  `local` command does not propagate the exit code from the command substitution.
 > ```shell
 > # bad example
 > local var_name="$(someCommand)" # this will return the exit code from local, not the command substitution
@@ -446,8 +450,8 @@ Pattern Matching is important to understand as it will be used by conditionals (
 Here are some examples of the special characters and classes used by Pattern Matching:
 
 ```shell
-*  # matches any string, including null
-?  # matches any single character
+*            # matches any string, including null
+?            # matches any single character
 
 [abcABC123]  # matches any one of the characters from the enclosed set
 [D-H3-8]     # matches any one of the characters from the enclosed ranges
@@ -473,6 +477,56 @@ Here are some examples of the special characters and classes used by Pattern Mat
 
 ---
 
+# Shell Expansions
+
+Bash performs 7 different types of shell expansions:
+
+### Brace Expansion
+
+Brace Expansion lets you generate multiple strings from a given pattern. The pattern can be:
+- A comma-separated list of strings
+- A range of integers or characters, using 2 periods (`..`) to separate the starting and ending characters
+  - Optionally, you can include an integer at the end which specifies the increment that will be used
+
+```shell
+# comma-separated list
+echo {a,b,c}     # returns: a b c
+
+# range
+echo {a..z}      # returns: a b c d e f etc.
+echo {a..z..5}   # with optional increment, returns every 5th letter: a f k p u z
+echo {0..30}     # returns: 0 1 2 3 4 5 etc.
+echo {0..30..7}  # with optional increment, returns every 7th number: 0 7 14 21 28
+echo {001-100}   # you can add zeros and the expansion will zero-pad the result: 001 002 003 etc.
+```
+
+You can include an optional string before the pattern (called a preamble) as well as an optional string after the pattern (called a postscript)
+
+```shell
+# preamble
+echo da{me,re,ze}  # returns: dame dare daze
+
+# postscript
+echo {her,my,them}self  # returns: herself, myself, themself
+
+# preamble and postscript
+echo bi{ng,plan,pol}e  # returns: binge, biplane, bipole
+```
+
+### Tilde Expansion
+
+### Parameter Expansion
+
+### Command Substitution
+
+### Arithmetic Expansion
+
+### Word Splitting
+
+### Filename Expansion
+
+---
+
 # If Statements
 
 ```shell
@@ -487,8 +541,8 @@ fi
 
 > GSG: Put `; then` at the end of the same line that contains `if` or `elif`
 
-- `conditional` can be any command, or set of commands, that will return an exit code
-  - Bash handles true or false differently from most programming languages, it treats true as `0` and false as not `0`
+- `conditional` can be any command, or set of commands, that will return an exit status
+  - In Bash, if a command is successful it has an exit status of `0`, and if it fails it will have a non-zero exit status
 - `elif` and `else` are optional, only use them if you need to
 - There are multiple ways to write your conditional expression. Three of those ways will be explored below
 
@@ -646,4 +700,4 @@ esac
 
 # For Loops
 
-# Shell Expansions
+# Arrays
