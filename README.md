@@ -493,29 +493,64 @@ Brace Expansion lets you generate multiple strings from a given pattern. The pat
 echo {a,b,c}     # returns: a b c
 
 # range
-echo {a..z}      # returns: a b c d e f etc.
+echo {a..z}      # alpha range, returns: a b c d e f etc.
 echo {a..z..5}   # with optional increment, returns every 5th letter: a f k p u z
-echo {0..30}     # returns: 0 1 2 3 4 5 etc.
+echo {0..30}     # integer range, returns: 0 1 2 3 4 5 etc.
 echo {0..30..7}  # with optional increment, returns every 7th number: 0 7 14 21 28
 echo {001-100}   # you can add zeros and the expansion will zero-pad the result: 001 002 003 etc.
-```
-
-You can include an optional string before the pattern (called a preamble) as well as an optional string after the pattern (called a postscript)
-
-```shell
-# preamble
-echo da{me,re,ze}  # returns: dame dare daze
-
-# postscript
-echo {her,my,them}self  # returns: herself, myself, themself
 
 # preamble and postscript
-echo bi{ng,plan,pol}e  # returns: binge, biplane, bipole
+echo da{me,re,ze}       # with optional preamble, returns: dame dare daze
+echo {her,my,them}self  # with optional postscript, returns: herself, myself, themself
+echo bi{ng,plan,pol}e   # with optional preamble & postscript, returns: binge, biplane, bipole
+
+# nesting brace expansions is supported
+echo {one{1,2},two{1,2}}  # returns: one1 one2 two1 two2
 ```
 
 ### Tilde Expansion
 
+Bash will do some special expansions for strings that start with the `~` character.
+
+```shell
+# home directories
+~      # expands to the value of the $HOME variable
+~user  # expands to the given user's home directory
+
+# pwd variables
+~+  # expands to the value of the $PWD variable
+~-  # expands to the value of the $OLDPWD variable
+
+# dirs variables
+~3   # same as the string returned from: dirs +3
+~+4  # same as the string returned from: dirs +4
+~-5  # same as the string returned from: dirs -5
+```
+
 ### Parameter Expansion
+
+AKA variable expansions, which we touched on ever so briefly in the Variables section. There is a LOT involved with Parameter expansion:
+
+Standard Variable Expansion:
+
+```shell
+$var_name    # expands to the value of var_name
+${var_name}  # expands to the value of var_name
+
+# for more info, see the full section on Variables earlier in this guide 
+```
+
+Dealing with non-existent or empty Variables:
+
+```shell
+${var_name:-"some other value"
+# if $var_name is set, then expand to its value
+# if $var_name is unset or empty, then expand to "some other value"
+
+
+```
+
+
 
 ### Command Substitution
 
