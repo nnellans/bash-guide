@@ -540,17 +540,48 @@ ${var_name}  # expands to the value of var_name
 # for more info, see the full section on Variables earlier in this guide 
 ```
 
-Dealing with non-existent or empty Variables:
+Parameter Expansions dealing with non-existent or empty Variables:
 
 ```shell
-${var_name:-"some other value"
+${var_name:-"some other value"}
 # if $var_name is set, then expand to its value
 # if $var_name is unset or empty, then expand to "some other value"
+
+${var_name:="some other value"}
+# same as the :- operator above, with one additional change:
+# if $var_name is unset or empty, then also assign "some other value" to $var_name
+
+${var_name:+"some other value"}
+# if $var_name is set, then don't use its value, return "some other value" instead
+# if $var_name is unset or empty, then return nothing at all
+
+${var_name:?"some other value"}
+# if $var_name is set, then expand to its value
+# if $var_name is unset or empty, then exit with an error, and send "some other value" to stderr
+```
+
+Parameter expansions dealing with string manipulations:
+
+```shell
+${#var_name}  # returns the length of $var_name's value
+${#*}         # returns the number of positional parameters, more on these later
+${#@}         # returns the number of positional parameters, more on these later
+
+${var_name:5}       # start at offset 5, return the remainder of the string
+${var_name:5:10}    # start at offset 5, return the next 10 characters
+${var_name: -5}     # return the last 5 characters from the end of the string, must have a space
+${var_name: -5:10}  # start at offset -5 (the end), return the next 10 characters, must have a space
+${@:5}              # postitional parameter (need more info???)
 
 
 ```
 
+Returning names of Variables:
 
+```shell
+${!prefix*}
+${!prefix@}
+```
 
 ### Command Substitution
 
