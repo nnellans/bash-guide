@@ -576,7 +576,7 @@ ${var_name:5}       # start at offset 5, return the remainder of the string
 ${var_name:5:10}    # start at offset 5, return the next 10 characters
 ${var_name: -5}     # return the last 5 characters from the end of the string, must have a space
 ${var_name: -5:10}  # start at the 5th character from the end, return the next 10 characters, must have a space
-#{var_name:5:-2}    # start at offset 5, return the remainder of the string but stopping before the last 2 characters
+${var_name:5:-2}    # start at offset 5, return the remainder of the string but stopping before the last 2 characters
 ${*:5}              # positional parameters: start at the 5th parameter, return the remainder of them
 ${@:5}              # positional parameters: same as above
 ${@: -7:3}          # positional parameters: start at the 7th parameter from the end, return the next 3
