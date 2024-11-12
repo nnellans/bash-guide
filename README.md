@@ -563,24 +563,56 @@ ${var_name:?"some other value"}
 Parameter expansions dealing with string manipulations:
 
 ```shell
+# length
 ${#var_name}  # returns the length of $var_name's value
-${#*}         # returns the number of positional parameters, more on these later
-${#@}         # returns the number of positional parameters, more on these later
+${#*}         # positional parameters: returns the total number of positional parameters
+${#@}         # positional parameters: same as above
+${#name[*]}   # arrays: returns the total number of elements in the array
+${#name[@]}   # arrays: same as above
+${#name[10]}  # arrays: returns the length of $name[10]'s value
 
+# substring
 ${var_name:5}       # start at offset 5, return the remainder of the string
 ${var_name:5:10}    # start at offset 5, return the next 10 characters
 ${var_name: -5}     # return the last 5 characters from the end of the string, must have a space
-${var_name: -5:10}  # start at offset -5 (the end), return the next 10 characters, must have a space
-${@:5}              # postitional parameter (need more info???)
+${var_name: -5:10}  # start at the 5th character from the end, return the next 10 characters, must have a space
+#{var_name:5:-2}    # start at offset 5, return the remainder of the string but stopping before the last 2 characters
+${*:5}              # positional parameters: start at the 5th parameter, return the remainder of them
+${@:5}              # positional parameters: same as above
+${@: -7:3}          # positional parameters: start at the 7th parameter from the end, return the next 3
+${name[*]:5}        # indexed arrays: start at the 5th value, return the remaining values
+${name[@]:5}        # indexed arrays: same as above
+${name[@]: -5:10}   # indexed arrays: start at the 5th value from the end, return the next 10 values
 
+# prefix / suffix removal with pattern matching
+${var_name#pattern}   # remove leading portion of the value that's matched by pattern (shortest match)
+${var_name##pattern}  # remove leading portion of the value that's matched by pattern (longest match)
+${var_name%pattern}   # remove ending portion of the value that's matched by pattern (shortest match)
+${var_name%%pattern}  # remove ending portion of the value that's matched by pattern (longest match)
 
+# search and replace with pattern matching
+# replacementString is optional, if omitted the occurences will be deleted
+${var_name/pattern/replacementString}   # replaces first occurence only
+${var_name//pattern/replacementString}  # replaces all occurences
+${var_name/#pattern/replacementString}  # match much occur at the beginning
+${var_name/%pattern/replacementString}  # match much occur at the end
+
+# converting case
+# pattern is optional, it defines the exact characters that can be converted, like [A-F]
+${var_name,,pattern}  # converts the entire value to lowercase
+${var_name,pattern}   # converts the first letter of the value to lowercase
+${var_name^^pattern}  # converts the entire value to uppercase
+${var_name^pattern}   # converts the first letter of the value to uppercase
 ```
 
 Returning names of Variables:
 
 ```shell
-${!prefix*}
-${!prefix@}
+${!prefix*}  # expands to a list of variables whose names begin with the prefix
+${!prefix@}  # same as above, but differs if used inside double-quotes
+
+${!name[*]}  # expands to a list of all indexes/keys in the array variable
+${!name[@]}  # same as above, but differs if used inside double-quotes
 ```
 
 ### Command Substitution
