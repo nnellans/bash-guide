@@ -479,7 +479,7 @@ Here are some examples of the special characters and classes used by Pattern Mat
 
 # Shell Expansions
 
-Bash performs 7 different types of shell expansions:
+Expansions are a huge part of Bash!  Bash performs 7 different types of shell expansions:
 
 ### Brace Expansion
 
@@ -522,7 +522,7 @@ Bash will do some special expansions for strings that start with the `~` charact
 ~-  # expands to the value of the $OLDPWD variable
 
 # dirs variables
-~3   # same as the string returned from: dirs +3
+~3   # same as the string returned from: dirs +3 (the + is assumed)
 ~+4  # same as the string returned from: dirs +4
 ~-5  # same as the string returned from: dirs -5
 ```
