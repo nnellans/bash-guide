@@ -560,17 +560,20 @@ ${var_name:?"some other value"}
 # if $var_name is unset or empty, then exit with an error, and send "some other value" to stderr
 ```
 
-Parameter expansions dealing with string manipulations:
+Parameter expansions dealing with length:
 
 ```shell
-# length
 ${#var_name}  # returns the length of $var_name's value
 ${#*}         # positional parameters: returns the total number of positional parameters
 ${#@}         # positional parameters: same as above
 ${#name[*]}   # arrays: returns the total number of elements in the array
 ${#name[@]}   # arrays: same as above
 ${#name[10]}  # arrays: returns the length of $name[10]'s value
+```
 
+Parameter expansions dealing with string manipulations:
+
+```shell
 # substring
 ${var_name:5}       # start at offset 5, return the remainder of the string
 ${var_name:5:10}    # start at offset 5, return the next 10 characters
@@ -611,8 +614,8 @@ Returning names of Variables:
 ${!prefix*}  # expands to a list of variables whose names begin with the prefix
 ${!prefix@}  # same as above, but differs if used inside double-quotes
 
-${!name[*]}  # expands to a list of all indexes/keys in the array variable
-${!name[@]}  # same as above, but differs if used inside double-quotes
+${!name[*]}  # arrays: expands to a list of all indexes/keys in the array variable
+${!name[@]}  # arrays: same as above, but differs if used inside double-quotes
 ```
 
 ### Command Substitution
