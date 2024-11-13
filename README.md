@@ -35,13 +35,13 @@
 - [Standard Input, Output, and Error](#standard-input-output-and-error)
 - [Pattern Matching](#pattern-matching)
 - [Shell Expansions](#shell-expansions)
-  - [Brace Expansion](#brace-expansion)
-  - [Tilde Expansion](#tilde-expansion)
-  - [Parameter Expansion](#parameter-expansion)
-  - [Command Substitution](#command-substitution)
-  - [Arithmetic Expansion](#arithmetic-expansion)
-  - [Word Splitting](#word-splitting)
-  - [Filename Expansion](#filename-expansion)
+  - [Brace Expansion](#1-brace-expansion)
+  - [Tilde Expansion](#2-tilde-expansion)
+  - [Parameter Expansion](#3-parameter-expansion)
+  - [Command Substitution](#4-command-substitution)
+  - [Arithmetic Expansion](#5-arithmetic-expansion)
+  - [Word Splitting](#6-word-splitting)
+  - [Filename Expansion](#7-filename-expansion)
 - [If Statements](#if-statements)
   - [test and [ ] commands](#conditional-1-the-test-and----commands)
   - [\[\[ \]\] commands](#conditional-2-the----commands)
@@ -67,12 +67,10 @@ echo "something" # comments can also go after a command, must have at least one 
 
 This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
 
-Standard example:
-- `#!/bin/bash`
+Standard example: `#!/bin/bash`
 - This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
 
-Portable (somewhat) version:
-- `#!/usr/bin/env bash`
+Portable version: `#!/usr/bin/env bash`
 - For portability reasons, it is commonly recommended to use a shebang like this
 - This version will run the first `bash` found in your `$PATH` variable
 - This also may not work for 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
@@ -118,7 +116,7 @@ ls --no-group \
   --size
 ```
 
-> GSG: You should try to keep your lines to 80 characters or less
+> [GSG](https://google.github.io/styleguide/shellguide.html): You should try to keep your lines to 80 characters or less
 
 You can send the output from command1 to the input of command2 using a pipe:
 
@@ -126,7 +124,7 @@ You can send the output from command1 to the input of command2 using a pipe:
 command1 | command2
 ```
 
-> GSG: If you can fit a whole pipeline on 1 line, then do it. If not, use multiple lines and put each segment on its own line:
+> [GSG](https://google.github.io/styleguide/shellguide.html): If you can fit a whole pipeline on 1 line, then do it. If not, use multiple lines and put each segment on its own line:
 >
 > ```shell
 > command1 \
@@ -166,8 +164,8 @@ Naming conventions:
 - Must not start with a number
 - Names are case-sensitive, so `varname` is different than `VarName`
 
-> GSG:
-> - Shell variable names should use all lowercase letters, with underscores to separate words
+> [GSG](https://google.github.io/styleguide/shellguide.html):
+> - Shell variable names should use all lowercase letters, with underscores to separate words<br />
 > - Constant (read-only) variable names should use all uppercase letters, with underscores to separate words
 
 Defining Shell variables:
@@ -191,7 +189,7 @@ declare -A var_name         # the -A declares an associative array
 readonly var_name="value"
 ```
 
-> GSG: For sake of clarity use `readonly` instead of `declare -r`
+> [GSG](https://google.github.io/styleguide/shellguide.html): For sake of clarity use `readonly` instead of `declare -r`
 
 Using Shell variables:
 
@@ -204,7 +202,7 @@ echo "$var_name"
 echo "${var_name}plusSomeMoreText"
 ```
 
-> GSG:
+> [GSG](https://google.github.io/styleguide/shellguide.html):
 > - Always double-quote strings containing variables
 > - Prefer `${var_name}` over `$var_name`, except:
 >   - Don't use braces for special variables like `$@` or `$!`, unless strictly necessary
@@ -224,7 +222,7 @@ Just like Shell variables, Environment variables can be used in the current shel
 
 Naming standards: same as Shell variables
 
-> GSG: Environment variable names should use all uppercase letters, with underscores to separate words
+> [GSG](https://google.github.io/styleguide/shellguide.html): Environment variable names should use all uppercase letters, with underscores to separate words
 
 Defining Environment variables:
 
@@ -240,7 +238,7 @@ export VAR_NAME="some value"
 declare -x VAR_NAME="some value" # the -x tells declare to 'export' this variable
 ```
 
-> GSG: For sake of clarity use `export` instead of `declare -x`
+> [GSG](https://google.github.io/styleguide/shellguide.html): For sake of clarity use `export` instead of `declare -x`
 
 Using Environment variables: same as Shell variables
 
@@ -271,7 +269,7 @@ function name_of_function {
 }
 ```
 
-> GSG:
+> [GSG](https://google.github.io/styleguide/shellguide.html):
 > - The opening `{` should be on the same line as the function name
 > - There should be no space between the function name and `()`
 
@@ -326,7 +324,8 @@ function_name() {
 }
 ```
 
-> GSG: Don't use `local` to create a variable and give it a value (using command substitution) in the same line. The  `local` command does not propagate the exit code from the command substitution.
+> [GSG](https://google.github.io/styleguide/shellguide.html): Don't use `local` to create a variable and give it a value (using command substitution) in the same line. The  `local` command does not propagate the exit code from the command substitution.
+> 
 > ```shell
 > # bad example
 > local var_name="$(someCommand)" # this will return the exit code from local, not the command substitution
@@ -340,7 +339,7 @@ function_name() {
 
 Think of "nicknames".  You can create an Alias to represent a complicated command, or set of commands.  For example, instead of typing a long command with complicated parameters over and over, you could create an Alias out of it. Then, you would just to type the Alias name instead of the long complicated command.
 
-> GSG: Aliases should be avoided in scripts. For almost every purpose, shell functions are preferred over aliases.
+> [GSG](https://google.github.io/styleguide/shellguide.html): Aliases should be avoided in scripts. For almost every purpose, shell functions are preferred over aliases.
 
 ```shell
 # define an alias
@@ -481,7 +480,7 @@ Here are some examples of the special characters and classes used by Pattern Mat
 
 Expansions are a huge part of Bash!  Bash performs 7 different types of shell expansions:
 
-### Brace Expansion
+### 1. Brace Expansion
 
 Brace Expansion lets you generate multiple strings from a given pattern. The pattern can be:
 - A comma-separated list of strings
@@ -508,7 +507,7 @@ echo bi{ng,plan,pol}e   # with optional preamble & postscript, returns: binge, b
 echo {one{1,2},two{1,2}}  # returns: one1 one2 two1 two2
 ```
 
-### Tilde Expansion
+### 2. Tilde Expansion
 
 Bash will do some special expansions for strings that start with the `~` character.
 
@@ -527,7 +526,7 @@ Bash will do some special expansions for strings that start with the `~` charact
 ~-5  # same as the string returned from: dirs -5
 ```
 
-### Parameter Expansion
+### 3. Parameter Expansion
 
 AKA variable expansions, which we touched on ever so briefly in the Variables section. There is a LOT involved with Parameter expansion:
 
@@ -594,7 +593,7 @@ ${var_name%pattern}   # remove ending portion of the value that's matched by pat
 ${var_name%%pattern}  # remove ending portion of the value that's matched by pattern (longest match)
 
 # search and replace with pattern matching
-# replacementString is optional, if omitted the occurences will be deleted
+# /replacementString is optional, if omitted the occurences will be deleted
 ${var_name/pattern/replacementString}   # replaces first occurence only
 ${var_name//pattern/replacementString}  # replaces all occurences
 ${var_name/#pattern/replacementString}  # match much occur at the beginning
@@ -613,18 +612,69 @@ Returning names of Variables:
 ```shell
 ${!prefix*}  # expands to a list of variables whose names begin with the prefix
 ${!prefix@}  # same as above, but differs if used inside double-quotes
+```
 
+Returning the indexes or keys from Array Variables:
+
+```shell
 ${!name[*]}  # arrays: expands to a list of all indexes/keys in the array variable
 ${!name[@]}  # arrays: same as above, but differs if used inside double-quotes
 ```
 
-### Command Substitution
+### 4. Command Substitution
 
-### Arithmetic Expansion
+A command substitution will expand to the output from the given command.
 
-### Word Splitting
+```shell
+$(command)  # standard form
+`command`   # alternate, older form
+```
 
-### Filename Expansion
+> [GSG](https://google.github.io/styleguide/shellguide.html): Use `$(command)` instead of backticks.
+
+```shell
+# nesting command substitutions
+$(command1 $(command2) param2)
+`command1 \`command2\` param2`  # the older form requires escaping the inner backquotes
+```
+
+> [GSG](https://google.github.io/styleguide/shellguide.html): The `$(command)` format doesn’t change when nested and is easier to read.
+
+```shell
+# shortcut for cat command substitutions
+$(cat file.txt) # instead of this
+$(< file.txt)   # you can use this
+```
+
+### 5. Arithmetic Expansion
+
+This expands to the result of an arithmetic expression. This only supports integers.
+
+```shell
+$(( 2 + 4 ))  # expands to 6
+```
+
+Some common operators, this is not an exhaustive list:
+
+```shell
+$(( int1 + int2 ))   # addition
+$(( int1 - int2 ))   # subtraction
+$(( int1 * int2 ))   # multiplication
+$(( int1 / int2 ))   # division
+$(( int1 % int2 ))   # remainder / modulo
+$(( int1 ** int2 ))  # exponentiation / power of
+```
+
+Nesting arithmetic expansion is supported, but it might be easier to just use parenthesis for grouping subexpressions instead:
+
+```shell
+$(( $(( 5 + 5 )) * 2 ))  # nesting arithmetic expansions
+$(( (5 + 5) * 2 ))       # grouping subexpressions with parenthesis
+```
+
+### 6. Word Splitting
+
+### 7. Filename Expansion
 
 ---
 
@@ -640,7 +690,7 @@ else
 fi
 ```
 
-> GSG: Put `; then` at the end of the same line that contains `if` or `elif`
+> [GSG](https://google.github.io/styleguide/shellguide.html): Put `; then` at the end of the same line that contains `if` or `elif`
 
 - `conditional` can be any command, or set of commands, that will return an exit status
   - In Bash, if a command is successful it has an exit status of `0`, and if it fails it will have a non-zero exit status
@@ -697,7 +747,7 @@ test expression
 
 `[[ … ]]` is the enhanced replacement for `test`.
 
-> GSG: `[[ … ]]` is preferred over `test` and `[ … ]`
+> [GSG](https://google.github.io/styleguide/shellguide.html): `[[ … ]]` is preferred over `test` and `[ … ]`
 
 `[[ … ]]` supports everything that `test` supports, with a few notable changes and additions:
 
@@ -726,7 +776,7 @@ Newly added expressions:
 
 `(( … ))` only supports arithmetic expressions.
 
-> GSG: Always use `(( … ))` rather than `let` or `expr`
+> [GSG](https://google.github.io/styleguide/shellguide.html): Always use `(( … ))` rather than `let` or `expr`
 
 `(( … ))` supports the following logical operators for its expressions:
 
@@ -791,7 +841,7 @@ case expressionToMatch in
 esac
 ```
 
-> GSG:
+> [GSG](https://google.github.io/styleguide/shellguide.html):
 > - Try to always use `;;` and avoid the alternative `;&` and `;;&` notations
 > - For single-line clauses, put a space after the closing `)` of pattern, as well as a space before the ending `;;`
 
