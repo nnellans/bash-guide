@@ -52,15 +52,13 @@
 ---
 # Script File Basics
 
-Bash scripts are just text files. A file extension is not required, however, it's common to use the `.sh` file extension.
+Shell scripts commonly use the `.sh` file extension.
 
 ### Comments
 
-Comments start with the `#` symbol.
-
 ```shell
-# this is a comment
-echo "something" # comments can also go after a command, must have at least one space before the #
+# comments start with the hashtag / pound sign symbol
+echo "something" # comments can also go after a command, but must have at least one space before the #
 ```
 
 ### Shebang
@@ -68,12 +66,11 @@ echo "something" # comments can also go after a command, must have at least one 
 This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
 
 Standard example: `#!/bin/bash`
-- This may not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
+- May not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
 
 Portable version: `#!/usr/bin/env bash`
-- For portability reasons, it is commonly recommended to use a shebang like this
 - This version will run the first `bash` found in your `$PATH` variable
-- This also may not work for 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
+- Also may not work in 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
 
 ### Shell options
 
@@ -84,13 +81,13 @@ The `set` command can be used to configure the shell.  Some common options are:
 - `set -o pipefail`
   - When piping commands together (`command1 | command2`) Bash will only return the exit status of the last command
   - This `set` option tells Bash to return a non-zero exit status if ANY of the commands in the pipeline fail
-- Bash lets you combine short parameters together, you can use all options at once with : `set -xeuo pipefail`
+- Bash lets you combine short parameters together, so you can use all options together: `set -xeuo pipefail`
 
 ---
 
 # Commands
 
-There are multiple types of commands you can run within bash:
+There are multiple types of commands you can run with bash:
 1. Executables (like binaries and scripts)
 2. Shell built-ins and keywords
 3. Shell functions
@@ -100,13 +97,13 @@ I created the graphic below to highlight how you can get information & help on t
 
 ![](images/bash-commands.png)
 
-You can put more than 1 command on a single line by separating them with semicolons:
+Put more than 1 command on a single line by separating them with semicolons:
 
 ```shell
 echo "this"; echo "that"; echo "up"; echo "down"
 ```
 
-For better readability, you can extend a single command across multiple lines using backslashes:
+Extend a single command across multiple lines using backslashes:
 
 ```shell
 ls --no-group \
@@ -118,13 +115,13 @@ ls --no-group \
 
 > [GSG](https://google.github.io/styleguide/shellguide.html): You should try to keep your lines to 80 characters or less
 
-You can send the output from command1 to the input of command2 using a pipe:
+Send the output from command1 to the input of command2 using a pipe:
 
 ```shell
 command1 | command2
 ```
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): If you can fit a whole pipeline on 1 line, then do it. If not, use multiple lines and put each segment on its own line:
+> [GSG](https://google.github.io/styleguide/shellguide.html): If you can't fit a whole pipeline on 1 line, then use multiple lines and put each segment on its own line:
 >
 > ```shell
 > command1 \
@@ -132,7 +129,7 @@ command1 | command2
 >   | command3
 > ```
 
-Bash supports 2 logical command operators for specifying AND and OR logic:
+Logical command operators for specifying AND and OR logic:
 
 ```shell
 # run command1 and, only if its successful, then run command2
@@ -142,7 +139,7 @@ command1 && command2
 command1 || command2
 ```
 
-For better readability in scripts, consider using the long form of parameters, when available:
+In scripts, consider using the long form of parameters, when available, for better readability:
 
 ```shell
 du --all --human-readable  # use this
@@ -152,8 +149,6 @@ du -ah                     # instead of this
 ---
 
 # Variables
-
-Variables in bash come in a couple of different flavors
 
 ### Shell Variables
 
@@ -165,8 +160,8 @@ Naming conventions:
 - Names are case-sensitive, so `varname` is different than `VarName`
 
 > [GSG](https://google.github.io/styleguide/shellguide.html):
-> - Shell variable names should use all lowercase letters, with underscores to separate words<br />
-> - Constant (read-only) variable names should use all uppercase letters, with underscores to separate words
+> - Shell variable names be all lowercase, with underscores to separate words<br />
+> - Constant (read-only) variable names should be all uppercase, with underscores to separate words
 
 Defining Shell variables:
 
@@ -197,8 +192,7 @@ Using Shell variables:
 # you can use a variable by preceding its name with a $ symbol
 echo "$var_name"
 
-# curly braces are optional (but also see the GSG: note below)
-# this is necessary if you have to do string concatenation
+# curly braces are optional, but they are necessary if you have to do string concatenation
 echo "${var_name}plusSomeMoreText"
 ```
 
@@ -211,18 +205,18 @@ echo "${var_name}plusSomeMoreText"
 Assigning temporary values to variables:
 
 ```shell
-# when you assign values to variables in the same line that you run a command,
+# assign values to variables in the same line that you run a command
 # these assignments will take effect only for the duration of the specified command
 var1="value1" var2="value2" command
 ```
 
 ### Environment Variables
 
-Just like Shell variables, Environment variables can be used in the current shell session.  However, Environment variables also have the benefit of being usable in any child shells or processes that are created.
+Environment variables are very similar to Shell variables, but have the added benefit of being usable in any child shells or processes that are created.
 
 Naming standards: same as Shell variables
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): Environment variable names should use all uppercase letters, with underscores to separate words
+> [GSG](https://google.github.io/styleguide/shellguide.html): Environment variable names should be all uppercase, with underscores to separate words
 
 Defining Environment variables:
 
@@ -243,8 +237,6 @@ declare -x VAR_NAME="some value" # the -x tells declare to 'export' this variabl
 Using Environment variables: same as Shell variables
 
 # Shell Functions
-
-Shell Functions allow you to define reusable blocks of code.
 
 > [!IMPORTANT]  
 > In your code, you must define your functions first before you can call them
@@ -275,7 +267,7 @@ function name_of_function {
 
 The `return` command is optional and is not required.
 - By default, a Shell function will return the exit code from the last command it runs
-- However, if you would like your function to return a specific exit code, then you can use `return` followed by a number.  For example, `return 1` would make your function return an exit code of 1
+- However, if you would like your function to return a specific exit code, then you can use `return` followed by a number
 
 Using (calling) Shell functions:
 
@@ -286,7 +278,7 @@ command2
 function_name
 ```
 
-Use Positional Parameters to pass arguments to a Shell function:<br />*(Positional Parameters will be discussed in more detail later)*
+Use Positional Parameters to pass arguments to a Shell function:
 
 ```shell
 # defining the function
@@ -337,8 +329,6 @@ function_name() {
 
 # Aliases
 
-Think of "nicknames".  You can create an Alias to represent a complicated command, or set of commands.  For example, instead of typing a long command with complicated parameters over and over, you could create an Alias out of it. Then, you would just to type the Alias name instead of the long complicated command.
-
 > [GSG](https://google.github.io/styleguide/shellguide.html): Aliases should be avoided in scripts. For almost every purpose, shell functions are preferred over aliases.
 
 ```shell
@@ -356,7 +346,7 @@ alias_name
 
 # Viewing Variables, Functions, and Aliases
 
-There are multiple commands to view all of the Shell variables, Environment variables, Functions, and Aliases that are defined in your environment. Below, you'll see a graphic I created that shows some of those commands, and what information each one will return.
+There are multiple commands to view the Shell variables, Environment variables, Functions, and Aliases that are defined in your environment. Below, you'll see a graphic I created that shows some of those commands, and what information each one will return.
 
 ![](images/bash-environment.png)
 
@@ -379,7 +369,7 @@ command1 | command2
 # method 2: take the contents of file.txt and feed it into command1's standard input
 command1 < file.txt
 
-# method 3a: Here Document: feed a whole body of text into command1's standard input
+# method 3a: "Here Document": feed a whole body of text into command1's standard input
 # the "token" should not be found anywhere else in the body of text
 # it is common to use the following token:  _EOF_
 command1 << token
@@ -396,7 +386,7 @@ command1 <<- token
     last line for now
 token
 
-# method 4: Here String: feed a single line of text into command1's standard input
+# method 4: "Here String": feed a single line of text into command1's standard input
 command1 <<< "line of text"
 ```
 
@@ -409,7 +399,7 @@ command >> file.txt  # append
 
 # redirect stdout to stderr
 command 1>&2
-command >&2   # stdout (file descriptor 1) is assumed, so the 1 can be omitted
+command >&2   # file descriptor 1 (stdout) is assumed, so the 1 can be omitted
 
 # suppress stdout by redirecting to /dev/null
 command > /dev/null
@@ -431,8 +421,7 @@ command 2> /dev/null
 ```shell
 # method 1: the traditional & most compatible way
 # this statement contains 2 redirections, and they must be in this order
-# first, redirect stdout to a file
-# second, redirect stderr to stdout
+# first, redirect stdout to a file. second, redirect stderr to stdout
 command > file.txt 2>&1
 
 # method 2: streamlined method for newer versions of Bash
@@ -444,9 +433,7 @@ command &>> file.txt  # append
 
 # Pattern Matching
 
-Pattern Matching is important to understand as it will be used by conditionals (`if` & `case`) as well as the various types of Shell Expansions.
-
-Here are some examples of the special characters and classes used by Pattern Matching:
+Not an exhaustive list.
 
 ```shell
 *            # matches any string, including null
@@ -478,7 +465,7 @@ Here are some examples of the special characters and classes used by Pattern Mat
 
 # Shell Expansions
 
-Expansions are a huge part of Bash!  Bash performs 7 different types of shell expansions:
+Bash performs 7 different types of shell expansions:
 
 ### 1. Brace Expansion
 
@@ -486,6 +473,8 @@ Brace Expansion lets you generate multiple strings from a given pattern. The pat
 - A comma-separated list of strings
 - A range of integers or characters, using 2 periods (`..`) to separate the starting and ending characters
   - Optionally, you can include an integer at the end which specifies the increment that will be used
+
+Brace Expansion is NOT performed on anything inside double quotes
 
 ```shell
 # comma-separated list
@@ -496,7 +485,7 @@ echo {a..z}      # alpha range, returns: a b c d e f etc.
 echo {a..z..5}   # with optional increment, returns every 5th letter: a f k p u z
 echo {0..30}     # integer range, returns: 0 1 2 3 4 5 etc.
 echo {0..30..7}  # with optional increment, returns every 7th number: 0 7 14 21 28
-echo {001-100}   # you can add zeros and the expansion will zero-pad the result: 001 002 003 etc.
+echo {001..100}  # you can add zeros and the expansion will zero-pad the result: 001 002 003 etc.
 
 # preamble and postscript
 echo da{me,re,ze}       # with optional preamble, returns: dame dare daze
@@ -509,7 +498,7 @@ echo {one{1,2},two{1,2}}  # returns: one1 one2 two1 two2
 
 ### 2. Tilde Expansion
 
-Bash will do some special expansions for strings that start with the `~` character.
+Tilde Expansion is NOT performed on anything inside double quotes
 
 ```shell
 # home directories
@@ -528,7 +517,7 @@ Bash will do some special expansions for strings that start with the `~` charact
 
 ### 3. Parameter Expansion
 
-AKA variable expansions, which we touched on ever so briefly in the Variables section. There is a LOT involved with Parameter expansion:
+AKA variable expansions, which we touched on in the Variables section. There is a LOT involved with Parameter expansion:
 
 Standard Variable Expansion:
 
@@ -581,10 +570,11 @@ ${var_name: -7:3}   # start at the 7th character from the end, return the next 3
 ${var_name:5:-2}    # start at offset 5, return the remainder of the string but stopping before the last 2 characters
 ${*:5}              # positional parameters: start at the 5th parameter, return the remainder of them
 ${@:5}              # positional parameters: same as above
-${@: -7:3}          # positional parameters: start at the 7th parameter from the end, return the next 3
+${@: -7:3}          # positional parameters: start at the 7th parameter from the end, return the next 3, must have a space
 ${name[*]:5}        # indexed arrays: start at the 5th value, return the remaining values
 ${name[@]:5}        # indexed arrays: same as above
-${name[@]: -7:3}    # indexed arrays: start at the 7th value from the end, return the next 3 values
+${name[@]: -7:3}    # indexed arrays: start at the 7th value from the end, return the next 3 values, must have a space
+${name[10]:5}       # indexed arrays: for the value of $name[10] start at offset 5, return the remainder of the string
 
 # prefix / suffix removal with pattern matching
 ${var_name#pattern}   # remove leading portion of the value that's matched by pattern (shortest match)
@@ -648,7 +638,7 @@ $(< file.txt)   # you can use this
 
 ### 5. Arithmetic Expansion
 
-This expands to the result of an arithmetic expression. This only supports integers.
+Expands to the result of an arithmetic expression. Only supports integers.
 
 ```shell
 $(( 2 + 4 ))  # expands to 6
@@ -672,9 +662,36 @@ $(( $(( 5 + 5 )) * 2 ))  # nesting arithmetic expansions
 $(( (5 + 5) * 2 ))       # grouping subexpressions with parenthesis
 ```
 
+Special assignment operators, not an exhaustive list:
+
+```shell
+$(( ++int1 ))  # increment. same as the assignment: int1 = int1 + 1
+$(( --int1 ))  # decrement. same as the assignment: int1 = int1 - 1
+
+$(( int1 += int2 ))  # same as the assignment: int1 = int1 + int2
+$(( int1 -= int2 ))  # same as the assignment: int1 = int1 - int2
+$(( int1 *= int2 ))  # same as the assignment: int1 = int1 * int2
+$(( int1 /= int2 ))  # same as the assignment: int1 = int1 / int2
+```
+
 ### 6. Word Splitting
 
+- By default, Word Splitting looks for spaces, tabs, and newline characters and treats them as delimiters between words
+- Spaces, tabs, and newlines are the default value for the special Shell variable `$IFS` (which stands for Internal Field Separator)
+  - If you want Word Splitting to operate differently, then update the value of `$IFS`
+- Word Splitting only occurs on the results of other expansions, namely Parameter Expansion, Command Substitution, and Arithmetic Expansion
+- Word Splitting is NOT performed on anything inside double quotes
+
 ### 7. Filename Expansion
+
+- When Bash finds a `*`, `?`, or `[` character it considers the word to be a pattern that will be used for Filename Expansion
+- Uses standard [Pattern Matching](#pattern-matching)
+- Filename Expansion is NOT performed on anything inside double quotes
+
+```shell
+# list all files under /usr/bin/ that start with the letter m
+ls /usr/bin/m*
+```
 
 ---
 
@@ -819,6 +836,7 @@ Newly added expressions:
 By default, when `case` finds the first match it will run the given commands and then exit, with no subsequent matches being attempted.  This behavior can be modified by changing `;;` to a different option (but also see the `GSG:` note below)
 - As a fallback, it is common to use `*` as the final pattern as this will always match
 - You can define multiple patterns on the same clause using the OR logical operator: `|`
+- Uses standard [Pattern Matching](#pattern-matching)
 
 ```shell
 case expressionToMatch in
