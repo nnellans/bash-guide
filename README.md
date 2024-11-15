@@ -58,10 +58,10 @@ echo "something" # comments can also go after a command, with at least 1 space b
 
 - This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
 - Standard example: `#!/bin/bash`
-  - May not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
+  - May not work in all cases, as some systems place `bash` in a different location other than `/bin`
 - Portable version: `#!/usr/bin/env bash`
   - This version will run the first `bash` found in the `$PATH` variable
-  - Also may not work in 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
+  - Also may not work in all cases, as some systems place `env` in a different location other than `/usr/bin`
 
 ### Shell options
 
