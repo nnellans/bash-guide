@@ -51,19 +51,17 @@ Shell scripts commonly use the `.sh` file extension.
 
 ```shell
 # comments start with the hashtag / pound sign symbol
-echo "something" # comments can also go after a command, but must have at least one space before the #
+echo "something" # comments can also go after a command, with at least 1 space before the #
 ```
 
 ### Shebang
 
-This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
-
-Standard example: `#!/bin/bash`
-- May not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
-
-Portable version: `#!/usr/bin/env bash`
-- This version will run the first `bash` found in your `$PATH` variable
-- Also may not work in 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
+- This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
+- Standard example: `#!/bin/bash`
+  - May not work in 100% of cases, as some systems place `bash` in a different location other than `/bin`
+- Portable version: `#!/usr/bin/env bash`
+  - This version will run the first `bash` found in the `$PATH` variable
+  - Also may not work in 100% of cases, as some systems place `env` in a different location other than `/usr/bin`
 
 ### Shell options
 
@@ -153,7 +151,7 @@ Naming conventions:
 - Names are case-sensitive, so `varname` is different than `VarName`
 
 > [GSG](https://google.github.io/styleguide/shellguide.html):
-> - Shell variable names be all lowercase, with underscores to separate words<br />
+> - Shell variable names should be all lowercase, with underscores to separate words
 > - Constant (read-only) variable names should be all uppercase, with underscores to separate words
 
 Defining Shell variables:
@@ -205,7 +203,7 @@ var1="value1" var2="value2" command
 
 ### Environment Variables
 
-Environment variables are very similar to Shell variables, but have the added benefit of being usable in any child shells or processes that are created.
+These are very similar to Shell variables, but have the added benefit of being usable in any child shells or processes that are created.
 
 Naming standards: same as Shell variables
 
@@ -556,18 +554,18 @@ Parameter expansions dealing with string manipulations:
 
 ```shell
 # substring
-${var_name:5}       # start at offset 5, return the remainder of the string
-${var_name:5:10}    # start at offset 5, return the next 10 characters
-${var_name: -5}     # return the last 5 characters from the end of the string, must have a space
-${var_name: -7:3}   # start at the 7th character from the end, return the next 3 characters, must have a space
-${var_name:5:-2}    # start at offset 5, return the remainder of the string but stopping before the last 2 characters
-${*:5}              # positional parameters: start at the 5th parameter, return the remainder of them
-${@:5}              # positional parameters: same as above
-${@: -7:3}          # positional parameters: start at the 7th parameter from the end, return the next 3, must have a space
-${name[*]:5}        # indexed arrays: start at the 5th value, return the remaining values
-${name[@]:5}        # indexed arrays: same as above
-${name[@]: -7:3}    # indexed arrays: start at the 7th value from the end, return the next 3 values, must have a space
-${name[10]:5}       # indexed arrays: for the value of $name[10] start at offset 5, return the remainder of the string
+${var_name:5}      # start at offset 5, return the remainder of the string
+${var_name:5:10}   # start at offset 5, return the next 10 characters
+${var_name: -5}    # return the last 5 characters from the end of the string, must have a space
+${var_name: -7:3}  # start at the 7th character from the end, return the next 3 characters, must have a space
+${var_name:5:-2}   # start at offset 5, return the remainder of the string but stopping before the last 2 characters
+${*:5}             # positional parameters: start at the 5th parameter, return the remainder of them
+${@:5}             # positional parameters: same as above
+${@: -7:3}         # positional parameters: start at the 7th parameter from the end, return the next 3, must have a space
+${name[*]:5}       # indexed arrays: start at the 5th value, return the remaining values
+${name[@]:5}       # indexed arrays: same as above
+${name[@]: -7:3}   # indexed arrays: start at the 7th value from the end, return the next 3 values, must have a space
+${name[10]:5}      # indexed arrays: for the value of $name[10] start at offset 5, return the remainder of the string
 
 # prefix / suffix removal with pattern matching
 ${var_name#pattern}   # remove leading portion of the value that's matched by pattern (shortest match)
@@ -658,11 +656,11 @@ $(( (5 + 5) * 2 ))       # grouping subexpressions with parenthesis
 Special assignment operators, not an exhaustive list:
 
 ```shell
-$(( ++int1 ))  # increment. same as the assignment: int1 = int1 + 1
-$(( --int1 ))  # decrement. same as the assignment: int1 = int1 - 1
+$(( ++int1 ))  # increment by 1. same as the assignment: int1 = int1 + 1
+$(( --int1 ))  # decrement by 1. same as the assignment: int1 = int1 - 1
 
-$(( int1 += int2 ))  # same as the assignment: int1 = int1 + int2
-$(( int1 -= int2 ))  # same as the assignment: int1 = int1 - int2
+$(( int1 += int2 ))  # increment by N. same as the assignment: int1 = int1 + int2
+$(( int1 -= int2 ))  # decrement by N. same as the assignment: int1 = int1 - int2
 $(( int1 *= int2 ))  # same as the assignment: int1 = int1 * int2
 $(( int1 /= int2 ))  # same as the assignment: int1 = int1 / int2
 ```
@@ -685,6 +683,19 @@ $(( int1 /= int2 ))  # same as the assignment: int1 = int1 / int2
 # list all files under /usr/bin/ that start with the letter m
 ls /usr/bin/m*
 ```
+
+### Effect of using Double Quotes
+
+|  | Expanded inside Double Quotes |
+| --- | --- |
+| Brace Expansion | ❌ |
+| Tilde Expansion | ❌ |
+| Parameter Expansion | ✔️ |
+| Command Substitution | ✔️ |
+| Arithmetic Expansion | ✔️ |
+| Word Splitting | ❌ |
+| Filename Expansion | ❌ |
+
 
 ---
 
@@ -712,11 +723,8 @@ fi
 The `test` command comes in 2 different forms:
 
 ```shell
-# less common form
-test expression
-
-# widely used form
-[ expression ]
+test expression  # less common form
+[ expression ]   # widely used form
 ```
 
 `test` supports a few logical operators for its expressions:
@@ -744,7 +752,6 @@ test expression
 [ string1 != string2 ]  # string1 is not equal to string2
 
 # numeric comparisons
-# GSG: for numeric comparisons you should really use (( ... )) instead
 [ int1 -eq int2 ]       # int1 equal to int2
 [ int1 -ne int2 ]       # int1 not equal to int2
 [ int1 -gt int2 ]       # int1 greater than int2
@@ -752,6 +759,8 @@ test expression
 [ int1 -lt int2 ]       # int1 less than int2
 [ int1 -le int2 ]       # int1 less than or equal to int2
 ```
+
+> [GSG](https://google.github.io/styleguide/shellguide.html): For numeric comparisons you should really use `(( … ))` instead
 
 ### Conditional 2: the `[[ … ]]` commands
 
@@ -860,7 +869,7 @@ esac
 
 ### While Loops
 
-The loop continues as long as the `testCommand` succeeds / has an exit status of `0`.
+`while` loops continue as long as the `testCommand` succeeds (has an exit status of `0`).<br />
 
 ```shell
 while testCommand; do
@@ -870,9 +879,7 @@ done
 
 ### Until Loops
 
-The loop continues as long as the `testCommand` fails / has a non-zero exit status.
-
-Put another way, the loop will continue UNTIL the `testCommand` finally succeeds.
+`until` loops continue as long as the `testCommand` fails (has a non-zero exit status).<br />Put another way, the loop will continue UNTIL the `testCommand` finally succeeds.<br />
 
 ```shell
 until testCommand; do
@@ -890,25 +897,19 @@ for symbolic_var in list; do
   commands
   echo "${symbolic_var}"
 done
-
-# "list" can be formed in multiple ways:
-#   brace expansion: {A..F}
-#   filename expansion: *.csv
-#   command substitution: $(someCommand)
-
-# "in list" is optional
-# if omitted, then it will loop through the positional parameters 
 ```
+
+- `in list` is optional. If omitted, then it will loop through the positional parameters 
 
 ```shell
 # second form
 for (( expression1; expression2; expression3 )); do
   commands
 done
-
-# expression1 initiates the loop counter, for example: i=0
-# expression2 defines the "while" loop condition, for example: i<5
-# expression3 runs after every loop to iterate the counter, for example: ++i
 ```
+
+- expression1 initiates the loop counter, for example: `i=0`
+- expression2 defines the "while" loop condition, for example: `i<5`
+- expression3 runs after every loop to iterate the counter, for example: `++i`
 
 # Arrays
