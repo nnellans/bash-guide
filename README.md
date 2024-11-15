@@ -35,19 +35,12 @@
 - [Standard Input, Output, and Error](#standard-input-output-and-error)
 - [Pattern Matching](#pattern-matching)
 - [Shell Expansions](#shell-expansions)
-  - [Brace Expansion](#1-brace-expansion)
-  - [Tilde Expansion](#2-tilde-expansion)
-  - [Parameter Expansion](#3-parameter-expansion)
-  - [Command Substitution](#4-command-substitution)
-  - [Arithmetic Expansion](#5-arithmetic-expansion)
-  - [Word Splitting](#6-word-splitting)
-  - [Filename Expansion](#7-filename-expansion)
 - [If Statements](#if-statements)
   - [test and [ ] commands](#conditional-1-the-test-and----commands)
   - [\[\[ \]\] commands](#conditional-2-the----commands)
   - [(( )) commands](#conditional-3-the----commands)
 - [Case Statements](#case-statements)
-- 
+- [Loops](#loops)
 
 ---
 # Script File Basics
@@ -750,7 +743,7 @@ test expression
 [ string1 == string2 ]  # same as above. this is the preferred form
 [ string1 != string2 ]  # string1 is not equal to string2
 
-# integer-based expressions
+# numeric comparisons
 # GSG: for numeric comparisons you should really use (( ... )) instead
 [ int1 -eq int2 ]       # int1 equal to int2
 [ int1 -ne int2 ]       # int1 not equal to int2
@@ -863,10 +856,59 @@ esac
 > - Try to always use `;;` and avoid the alternative `;&` and `;;&` notations
 > - For single-line clauses, put a space after the closing `)` of pattern, as well as a space before the ending `;;`
 
-# While Loops
+# Loops
 
-# Until Loops
+### While Loops
 
-# For Loops
+The loop continues as long as the `testCommand` succeeds / has an exit status of `0`.
+
+```shell
+while testCommand; do
+  otherCommands
+done
+```
+
+### Until Loops
+
+The loop continues as long as the `testCommand` fails / has a non-zero exit status.
+
+Put another way, the loop will continue UNTIL the `testCommand` finally succeeds.
+
+```shell
+until testCommand; do
+  otherCommands
+done
+```
+
+### For Loops
+
+`for` loops come in 2 different forms:
+
+```shell
+# first form
+for symbolic_var in list; do
+  commands
+  echo "${symbolic_var}"
+done
+
+# "list" can be formed in multiple ways:
+#   brace expansion: {A..F}
+#   filename expansion: *.csv
+#   command substitution: $(someCommand)
+
+# "in list" is optional
+# if omitted, then it will loop through the positional parameters 
+```
+
+```shell
+# second form
+for (( expression1; expression2; expression3 )); do
+  commands
+done
+
+# expression1 initiates the loop counter, for example: i=0
+# expression2 defines the "while" loop condition, for example: i<5
+# expression3 runs after every loop to iterate the counter, for example: ++i
+```
 
 # Arrays
