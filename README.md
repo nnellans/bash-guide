@@ -21,9 +21,6 @@
 
 # Table of Contents
 - [Script File Basics](#script-file-basics)
-  - [Comments](#comments)
-  - [Shebang](#shebang)
-  - [Shell Options](#shell-options) 
 - [Commands](#commands)
 - [Variables](#variables)
   - [Shell Variables](#shell-variables)
@@ -34,6 +31,7 @@
 - [Viewing Variables, Functions, and Aliases](#viewing-variables-functions-and-aliases)
 - [Standard Input, Output, and Error](#standard-input-output-and-error)
 - [Pattern Matching](#pattern-matching)
+- [Shell Arithmetic](#shell-arithmetic)
 - [Shell Expansions](#shell-expansions)
 - [If Statements](#if-statements)
   - [test and [ ] commands](#conditional-1-the-test-and----commands)
@@ -88,54 +86,35 @@ I created the graphic below to highlight how you can get information & help on t
 
 ![](images/bash-commands.png)
 
-Put more than 1 command on a single line by separating them with semicolons:
-
 ```shell
+# put more than 1 command on a single line by separating them with semicolons
 echo "this"; echo "that"; echo "up"; echo "down"
-```
 
-Extend a single command across multiple lines using backslashes:
-
-```shell
+# extend a single command across multiple lines using backslashes
 ls --no-group \
   --inode \
   --reverse \
   --recursive \
   --size
-```
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): You should try to keep your lines to 80 characters or less
-
-Send the output from command1 to the input of command2 using a pipe:
-
-```shell
+# send the output from command1 to the input of command2 using a pipe
 command1 | command2
-```
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): If you can't fit a whole pipeline on 1 line, then use multiple lines and put each segment on its own line:
->
-> ```shell
-> command1 \
->   | command2 \
->   | command3
-> ```
+# extend long pipelines across multiple lines
+command1 \
+  | command2 \
+  | command3
 
-Logical command operators for specifying AND and OR logic:
+# logical command operators for specifying AND and OR logic
+command1 && command2  # run command1 and, only if its successful, then run command2
+command1 || command2  # run command1 and, only if it fails, then run command2
 
-```shell
-# run command1 and, only if its successful, then run command2
-command1 && command2
-
-# run command1 and, only if it fails, then run command2
-command1 || command2
-```
-
-In scripts, consider using the long form of parameters, when available, for better readability:
-
-```shell
+# in scripts, consider using the long form of parameters, when available, for better readability
 du --all --human-readable  # use this
 du -ah                     # instead of this
 ```
+
+> [GSG](https://google.github.io/styleguide/shellguide.html): You should try to keep your lines to 80 characters or less
 
 ---
 
@@ -424,9 +403,9 @@ command &>> file.txt  # append
 
 # Pattern Matching
 
-Can be used in multiple ways: parameter expansion `$( … )`, filename expansion, the `[[ … ]]` compound commands, the `case` statement, etc.
+Can be used in multiple ways: filename expansion, parameter expansion `$( … )`, the `[[ … ]]` compound commands, the `case` statement, etc.
 
-Not an exhaustive list.
+The following is not an exhaustive list:
 
 ```shell
 *            # matches any string, including null
@@ -458,9 +437,11 @@ Not an exhaustive list.
 
 # Shell Arithmetic
 
-Can be used in multiple ways: arithmetic expansion `$(( … ))`, the `(( … ))` compound commands, the `let` command, the `expr` command, etc.
+Can be used in multiple ways: arithmetic expansion `$(( … ))`, the `(( … ))` compound commands, the `let` command, the `expr` command, `for` loops, etc.
 
 > [GSG](https://google.github.io/styleguide/shellguide.html): Always use `(( … ))` or `$(( … ))` rather than `let` or `expr` or `$[ … ]`
+
+This is not an exhaustive list:
 
 ```shell
 int1 + int2   # addition
@@ -479,7 +460,7 @@ int1 *= int2   # same as the assignment: int1 = int1 * int2
 int1 /= int2   # same as the assignment: int1 = int1 / int2
 ```
 
-Operators that can be used for comparisons in `if` statements:
+Comparison operators that are useful in `if` statements with `(( … ))`:
 
 ```shell
 int1 == int2  # equal to
@@ -680,7 +661,7 @@ $(< file.txt)   # you can use this
 
 Expands to the result of an arithmetic expression
 - Only supports integers
-- Supports the operators from the Shell Arithmetic section
+- Supports the operators from the [Shell Arithmetic](#shell-arithmetic) section
 
 ```shell
 $(( 2 + 4 ))  # expands to 6
@@ -723,7 +704,6 @@ ls /usr/bin/m*
 | Arithmetic Expansion | ✔️ |
 | Word Splitting | ❌ |
 | Filename Expansion | ❌ |
-
 
 ---
 
@@ -821,9 +801,8 @@ Newly added expressions:
 
 ### Conditional 3: the `(( … ))` commands
 
-`(( … ))` only supports arithmetic expressions.
-
-
+- `(( … ))` only supports arithmetic expressions
+- Supports the operators from the [Shell Arithmetic](#shell-arithmetic) section
 
 # Case Statements
 
