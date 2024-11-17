@@ -424,6 +424,8 @@ command &>> file.txt  # append
 
 # Pattern Matching
 
+Can be used in multiple ways: parameter expansion `$( … )`, filename expansion, the `[[ … ]]` compound commands, the `case` statement, etc.
+
 Not an exhaustive list.
 
 ```shell
@@ -450,6 +452,53 @@ Not an exhaustive list.
 
 # negation, matches any character NOT belonging to the given class
 [![:alpha:]]
+```
+
+---
+
+# Shell Arithmetic
+
+Can be used in multiple ways: arithmetic expansion `$(( … ))`, the `(( … ))` compound commands, the `let` command, the `expr` command, etc.
+
+> [GSG](https://google.github.io/styleguide/shellguide.html): Always use `(( … ))` or `$(( … ))` rather than `let` or `expr` or `$[ … ]`
+
+```shell
+int1 + int2   # addition
+int1 - int2   # subtraction
+int1 * int2   # multiplication
+int1 / int2   # division
+int1 % int2   # remainder / modulo
+int1 ** int2  # exponentiation / power of
+
+# some special operators that also do assignment
+++int1         # increment by 1. same as the assignment: int1 = int1 + 1
+--int1         # decrement by 1. same as the assignment: int1 = int1 - 1
+int1 += int2   # increment by N. same as the assignment: int1 = int1 + int2
+int1 -= int2   # decrement by N. same as the assignment: int1 = int1 - int2
+int1 *= int2   # same as the assignment: int1 = int1 * int2
+int1 /= int2   # same as the assignment: int1 = int1 / int2
+```
+
+Operators that can be used for comparisons in `if` statements:
+
+```shell
+int1 == int2  # equal to
+int1 != int2  # not equal to
+int1 < int2   # less than
+int1 <= int2  # less than or equal to
+int1 > int2   # greater than
+int1 >= int2  # greater than or equal to
+
+! expression1               # expression1 does NOT succeed
+expression1 && expression2  # both expression1 AND expression2 succeeds
+expression1 || expression2  # either expression1 OR expression2 succeeds
+
+# ternary conditional operator
+# test expression1 first
+# - if it succeeds, THEN test expression2
+# - if it fails, ELSE test expression3
+# will return the exit status from expression2 or 3 (whichever one gets tested)
+expression1 ? expression2 : expression3
 ```
 
 ---
@@ -629,21 +678,12 @@ $(< file.txt)   # you can use this
 
 ### 5. Arithmetic Expansion
 
-Expands to the result of an arithmetic expression. Only supports integers.
+Expands to the result of an arithmetic expression
+- Only supports integers
+- Supports the operators from the Shell Arithmetic section
 
 ```shell
 $(( 2 + 4 ))  # expands to 6
-```
-
-Some common operators, this is not an exhaustive list:
-
-```shell
-$(( int1 + int2 ))   # addition
-$(( int1 - int2 ))   # subtraction
-$(( int1 * int2 ))   # multiplication
-$(( int1 / int2 ))   # division
-$(( int1 % int2 ))   # remainder / modulo
-$(( int1 ** int2 ))  # exponentiation / power of
 ```
 
 Nesting arithmetic expansion is supported, but it might be easier to just use parenthesis for grouping subexpressions instead:
@@ -651,18 +691,6 @@ Nesting arithmetic expansion is supported, but it might be easier to just use pa
 ```shell
 $(( $(( 5 + 5 )) * 2 ))  # nesting arithmetic expansions
 $(( (5 + 5) * 2 ))       # grouping subexpressions with parenthesis
-```
-
-Special assignment operators, not an exhaustive list:
-
-```shell
-$(( ++int1 ))  # increment by 1. same as the assignment: int1 = int1 + 1
-$(( --int1 ))  # decrement by 1. same as the assignment: int1 = int1 - 1
-
-$(( int1 += int2 ))  # increment by N. same as the assignment: int1 = int1 + int2
-$(( int1 -= int2 ))  # decrement by N. same as the assignment: int1 = int1 - int2
-$(( int1 *= int2 ))  # same as the assignment: int1 = int1 * int2
-$(( int1 /= int2 ))  # same as the assignment: int1 = int1 / int2
 ```
 
 ### 6. Word Splitting
@@ -795,43 +823,7 @@ Newly added expressions:
 
 `(( … ))` only supports arithmetic expressions.
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): Always use `(( … ))` rather than `let` or `expr`
 
-`(( … ))` supports the following logical operators for its expressions:
-
-```shell
-(( ! expression1 ))               # expression1 does NOT succeed
-(( expression1 && expression2 ))  # both expression1 AND expression2 succeeds
-(( expression1 || expression2 ))  # either expression1 OR expression2 succeeds
-```
-
-`(( … ))` also supports a ternary conditional operator
-
-```shell
-# test expression1 first. if successful, THEN test expression2. ELSE if it fails, then test expression3
-# will return the exit status from expression2 or 3 (whichever one gets tested)
-(( expression1 ? expression2 : expression3 ))
-```
-
-`(( … ))` supports many types of arithmetic expressions. This is not an exhaustive list.
-
-```shell
-# comparison expressions
-(( int1 == int2 ))          # equal to
-(( int1 != int2 ))          # not equal to
-(( int1 < int2 ))           # less than
-(( int1 <= int2 ))          # less than or equal to
-(( int1 > int2 ))           # greater than
-(( int1 >= int2 ))          # greater than or equal to
-
-# arithmetic expressions. these examples all use ==, but any comparison operator above is supported
-(( int1 + int2 == int3 ))   # addition
-(( int1 - int2 == int3 ))   # subtraction
-(( int1 * int2 == int3 ))   # multiplication
-(( int1 / int2 == int3 ))   # division
-(( int1 % int2 == int3 ))   # remainder / modulo
-(( int1 ** int2 == int3 ))  # exponentiation / power of
-```
 
 # Case Statements
 
