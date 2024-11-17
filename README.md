@@ -39,6 +39,7 @@
   - [(( )) commands](#conditional-3-the----commands)
 - [Case Statements](#case-statements)
 - [Loops](#loops)
+- [Arrays](#arrays)
 
 ---
 # Script File Basics
@@ -56,10 +57,10 @@ echo "something" # comments can also go after a command, with at least 1 space b
 
 - This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
 - Standard example: `#!/bin/bash`
-  - May not work in all cases, as some systems place `bash` in a different location other than `/bin`
+  - Note: not all systems place `bash` in `/bin`
 - Portable version: `#!/usr/bin/env bash`
   - This version will run the first `bash` found in the `$PATH` variable
-  - Also may not work in all cases, as some systems place `env` in a different location other than `/usr/bin`
+  - Note: not all systems place `env` in `/usr/bin`
 
 ### Shell options
 
@@ -85,6 +86,8 @@ There are multiple types of commands you can run with bash:
 I created the graphic below to highlight how you can get information & help on the 4 types of commands:
 
 ![](images/bash-commands.png)
+
+Various notes about running commands:
 
 ```shell
 # put more than 1 command on a single line by separating them with semicolons
@@ -112,6 +115,9 @@ command1 || command2  # run command1 and, only if it fails, then run command2
 # in scripts, consider using the long form of parameters, when available, for better readability
 du --all --human-readable  # use this
 du -ah                     # instead of this
+
+# finding the exit status of the last commmand
+echo "$?"  # the special variable $? expands to the exit status of the last command
 ```
 
 > [GSG](https://google.github.io/styleguide/shellguide.html): You should try to keep your lines to 80 characters or less
@@ -147,8 +153,6 @@ var1="value1" var2="value2" var3="value3"
 declare var_name="value"
 declare -r var_name="value" # the -r marks this variable as read-only (constant)
 declare -i var_name=34527   # the -i marks this variable with the 'integer' attribute
-declare -a var_name         # the -a declares an indexed array
-declare -A var_name         # the -A declares an associative array
 
 # another way to set a variable as readonly
 readonly var_name="value"
@@ -185,8 +189,6 @@ var1="value1" var2="value2" command
 These are very similar to Shell variables, but have the added benefit of being usable in any child shells or processes that are created.
 
 Naming standards: same as Shell variables
-
-> [GSG](https://google.github.io/styleguide/shellguide.html): Environment variable names should be all uppercase, with underscores to separate words
 
 Defining Environment variables:
 
@@ -575,9 +577,6 @@ Parameter expansions dealing with length:
 ${#var_name}  # returns the length of $var_name's value
 ${#*}         # positional parameters: returns the total number of positional parameters
 ${#@}         # positional parameters: same as above
-${#name[*]}   # arrays: returns the total number of elements in the array
-${#name[@]}   # arrays: same as above
-${#name[10]}  # arrays: returns the length of $name[10]'s value
 ```
 
 Parameter expansions dealing with string manipulations:
@@ -595,7 +594,7 @@ ${@: -7:3}         # positional parameters: start at the 7th parameter from the 
 ${name[*]:5}       # indexed arrays: start at the 5th value, return the remaining values
 ${name[@]:5}       # indexed arrays: same as above
 ${name[@]: -7:3}   # indexed arrays: start at the 7th value from the end, return the next 3 values, must have a space
-${name[10]:5}      # indexed arrays: for the value of $name[10] start at offset 5, return the remainder of the string
+${name[10]:5}      # arrays: for the value of $name[10] start at offset 5, return the remainder of the string
 
 # prefix / suffix removal with pattern matching
 ${var_name#pattern}   # remove leading portion of the value that's matched by pattern (shortest match)
@@ -623,13 +622,6 @@ Returning names of Variables:
 ```shell
 ${!prefix*}  # expands to a list of variables whose names begin with the prefix
 ${!prefix@}  # same as above, but differs if used inside double-quotes
-```
-
-Returning the indexes or keys from Array Variables:
-
-```shell
-${!name[*]}  # arrays: expands to a list of all indexes/keys in the array variable
-${!name[@]}  # arrays: same as above, but differs if used inside double-quotes
 ```
 
 ### 4. Command Substitution
@@ -772,11 +764,8 @@ test expression  # less common form
 
 ### Conditional 2: the `[[ … ]]` commands
 
-`[[ … ]]` is the enhanced replacement for `test`.
-
-> [GSG](https://google.github.io/styleguide/shellguide.html): `[[ … ]]` is preferred over `test` and `[ … ]`
-
-`[[ … ]]` supports everything that `test` supports, with a few notable changes and additions:
+- `[[ … ]]` is the enhanced replacement for `test`.
+- `[[ … ]]` supports everything that `test` supports, with a few notable changes and additions:
 
 Changes to logical operators:
 
@@ -799,9 +788,11 @@ Newly added expressions:
 [[ string != pattern ]]
 ```
 
+> [GSG](https://google.github.io/styleguide/shellguide.html): `[[ … ]]` is preferred over `test` and `[ … ]`
+
 ### Conditional 3: the `(( … ))` commands
 
-- `(( … ))` only supports arithmetic expressions
+- Only supports arithmetic expressions
 - Supports the operators from the [Shell Arithmetic](#shell-arithmetic) section
 
 # Case Statements
@@ -879,8 +870,92 @@ for (( expression1; expression2; expression3 )); do
 done
 ```
 
-- expression1 initiates the loop counter, for example: `i=0`
-- expression2 defines the "while" loop condition, for example: `i<5`
+- expression1 initiates the loop counter, for example: `i = 0`
+- expression2 defines the "while" loop condition, for example: `i < 5`
 - expression3 runs after every loop to iterate the counter, for example: `++i`
 
 # Arrays
+
+- Bash array are one-dimensional (think of a single-column spreadsheet)
+- Arrays can be:
+  - "indexed" which means they use a zero-based numerical index
+  - "associative" which means they use a string-based index
+
+Naming standards: same as Shell variables
+
+Defining Indexed Arrays:
+
+```shell
+# 1. assign a value to a single index
+array_name[2]="Some value"
+
+# 2. assign multiple values in one line
+array_name=("firstValue" "secondValue" "thirdValue")
+
+# 3. assign multiple values and their indexes in one line
+array_name=([0]="firstValue" [1]="secondValue")
+
+# 4. using declare -a
+declare -a array_name
+declare -a array_name=("firstValue" "secondValue")
+
+# 5. mark as readonly with declare -a -r
+declare -a -r array_name=("firstValue" "secondValue")
+
+# 6. mark as readonly with readonly -a
+readonly -a array_name=("firstValue" "secondValue")
+```
+
+Defining Associative Arrays:
+
+```shell
+# 1. using declare with -A
+declare -A array_name
+declare -A array_name([firstIndex]="firstValue" [secondindex]="secondValue")
+
+# 2. assign a value to a single index
+array_name[firstIndex]="firstValue"  # must 'declare' the associative array first
+
+# 3. mark as readonly with declare -A -r
+declare -A -r array_name=([firstIndex]="firstValue" [secondIndex]="secondValue")
+
+# 4. mark as readonly with readonly -A
+readonly -A array_name=([firstIndex]="firstValue" [secondIndex]="secondValue")
+```
+
+Using Array values:
+
+```shell
+# preceed its name with a $ symbol, braces are required
+echo "${array_name[3]}"      # indexed arrays: expands to the value at index 3
+echo "${array_name[first]}"  # associate arrays: expands to the value at index "first"
+```
+
+Special Array syntax:
+
+```shell
+# expands to all values in the array
+${array_name[*]}  # if double-quoted, expands to one big word with all values
+${array_name[@]}  # if double-quoted, expands to a separate word for each value
+
+# expands to all indexes in the array
+${!array_name[*]}  # if double-quoted, expands to one big word with all indexes
+${!array_name[@]}  # if double-quoted, expands to a separate word for each value
+
+# expands to the number of elements in the array
+${#array_name[*]}
+${#array_name[@]}
+
+# add values to the end of an array with +=
+array_name+=("someValue" "anotherValue" "lastValue")
+```
+
+Sorting an array:
+
+```shell
+# there is no built-in way to sort an array
+# instead, use a for loop to get all array values, and pipe them to the sort command
+unsorted_array=(q e h z a w r)
+sorted_array=( $(for i in "${unsorted_array[@]}"; do echo "$i"; done | sort) )
+echo "${sorted_array[@]}"
+```
