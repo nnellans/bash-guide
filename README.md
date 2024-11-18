@@ -714,7 +714,9 @@ else
 fi
 ```
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): Put `; then` at the end of the same line that contains `if` or `elif`
+> [GSG](https://google.github.io/styleguide/shellguide.html):
+> - Put `; then` at the end of the same line that contains `if` or `elif`
+> - `fi` statements should be on their own line vertically aligned with the opening statement
 
 - `conditional` can be any command, or set of commands, that will return an exit status
   - In Bash, if a command is successful it has an exit status of `0`, and if it fails it will have a non-zero exit status
@@ -836,6 +838,10 @@ esac
 
 # Loops
 
+> [GSG](https://google.github.io/styleguide/shellguide.html):
+> - Put `; do` at the end of the same line that contains `while`, `until`, or `for`
+> - `done` statements should be on their own line vertically aligned with the opening statement
+
 ### While Loops
 
 `while` loops continue as long as the `testCommand` succeeds (has an exit status of `0`).<br />
@@ -868,7 +874,9 @@ for symbolic_var in list; do
 done
 ```
 
-- `in list` is optional. If omitted, then it will loop through the positional parameters 
+`in list` is optional. If omitted, then it will loop through the positional parameters (but see below)
+
+> [GSG](https://google.github.io/styleguide/shellguide.html): Although it is possible to omit `in "$@"` in `for` loops we recommend consistently including it for clarity
 
 ```shell
 # second form
