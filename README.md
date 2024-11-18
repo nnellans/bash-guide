@@ -40,7 +40,7 @@
 - [Case Statements](#case-statements)
 - [Loops](#loops)
 - [Array Variables](#array-variables)
-- Positional Parameters
+- [Positional Parameters](#positional-parameters)
 
 ---
 # Script File Basics
@@ -578,8 +578,6 @@ Parameter expansions dealing with length:
 
 ```shell
 ${#var_name}  # returns the length of $var_name's value
-${#*}         # positional parameters: returns the total number of positional parameters
-${#@}         # positional parameters: same as above
 ```
 
 Parameter expansions dealing with string manipulations:
@@ -591,8 +589,8 @@ ${var_name:5:10}   # start at offset 5, return the next 10 characters
 ${var_name: -5}    # return the last 5 characters from the end of the string, must have a space
 ${var_name: -7:3}  # start at the 7th character from the end, return the next 3 characters, must have a space
 ${var_name:5:-2}   # start at offset 5, return the remainder of the string but stopping before the last 2 characters
-${*:5}             # positional parameters: start at the 5th parameter, return the remainder of them
-${@:5}             # positional parameters: same as above
+${*:5}             # positional parameters: start at the 5th parameter, return the remainder of them. if double-quoted expands to one big word
+${@:5}             # positional parameters: same as above. if double-quoted expands to a separate word for each parameter
 ${@: -7:3}         # positional parameters: start at the 7th parameter from the end, return the next 3, must have a space
 ${name[*]:5}       # indexed arrays: start at the 5th value, return the remaining values
 ${name[@]:5}       # indexed arrays: same as above
@@ -623,8 +621,9 @@ ${var_name^pattern}   # converts the first letter of the value to uppercase
 Returning names of Variables:
 
 ```shell
-${!prefix*}  # expands to a list of variables whose names begin with the prefix
-${!prefix@}  # same as above, but differs if used inside double-quotes
+# expands to all variable names that begin with the given prefix
+${!prefix*}  # if double-quoted, expands to one big word with all variable names
+${!prefix@}  # if double-quoted, expands to a separate word for each variable name
 ```
 
 ### 4. Command Substitution
@@ -633,7 +632,7 @@ A command substitution will expand to the output from the given command.
 
 ```shell
 $(command)  # standard form
-`command`   # alternate, older form
+`command`   # alternate, older form using backticks
 ```
 
 > [GSG](https://google.github.io/styleguide/shellguide.html): Use `$(command)` instead of backticks.
@@ -951,6 +950,10 @@ echo "${array_name[first]}"  # associate arrays: expands to the value at index "
 Special Array syntax:
 
 ```shell
+# expands to the total number of elements in the array
+${#array_name[*]}
+${#array_name[@]}
+
 # expands to all values in the array
 ${array_name[*]}  # if double-quoted, expands to one big word with all values
 ${array_name[@]}  # if double-quoted, expands to a separate word for each value
@@ -958,10 +961,6 @@ ${array_name[@]}  # if double-quoted, expands to a separate word for each value
 # expands to all indexes in the array
 ${!array_name[*]}  # if double-quoted, expands to one big word with all indexes
 ${!array_name[@]}  # if double-quoted, expands to a separate word for each value
-
-# expands to the number of elements in the array
-${#array_name[*]}
-${#array_name[@]}
 
 # add values to the end of an array with +=
 array_name+=("someValue" "anotherValue" "lastValue")
@@ -980,3 +979,31 @@ echo "${sorted_array[@]}"
 ---
 
 # Positional Parameters
+
+- Used in a few circumstances:
+  - Arguments passed to the shell when its invoked
+  - Arguments passed to a script
+  - Arguments passed to a shell function
+- Can be reassigned using the `set` command
+- Positional Parameter `0` always expands to the name of the shell or shell script, which means the first passed argument will be at Positional Parameter `1`
+
+Using Positional Parameters:
+
+```shell
+$3
+${5}   # for 0 through 9, braces are optional
+${25}  # starting with 10 and higher, braces are required
+```
+
+Special Positional Parameter syntax:
+
+```shell
+# expands to the total number of positional parameters
+$#
+${#*}
+${#@}
+
+# expands to the values of all positional parameters
+$*  # if double-quoted, expands to one big word with all positional parameters values
+$@  # if double-quoted, expands to a separate word for each positional parameter value
+```
