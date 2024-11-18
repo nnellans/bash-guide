@@ -39,7 +39,8 @@
   - [(( )) commands](#conditional-3-the----commands)
 - [Case Statements](#case-statements)
 - [Loops](#loops)
-- [Arrays](#arrays)
+- [Array Variables](#array-variables)
+- Positional Parameters
 
 ---
 # Script File Basics
@@ -218,7 +219,7 @@ Naming standards: same as Shell variables
 Defining Shell Functions:
 
 ```shell
-# method 1: this is the most compatible method
+# method 1
 name_of_function() {
   command1
   command2
@@ -226,7 +227,8 @@ name_of_function() {
 }
 
 # method 2
-function name_of_function {
+# the () is optional with this method
+function name_of_function() {
   command1
   command2
   return #optional
@@ -236,6 +238,7 @@ function name_of_function {
 > [GSG](https://google.github.io/styleguide/shellguide.html):
 > - The opening `{` should be on the same line as the function name
 > - There should be no space between the function name and `()`
+> - The `function` keyword enhances quick identification of functions
 
 The `return` command is optional and is not required.
 - By default, a Shell function will return the exit code from the last command it runs
@@ -795,6 +798,8 @@ Newly added expressions:
 - Only supports arithmetic expressions
 - Supports the operators from the [Shell Arithmetic](#shell-arithmetic) section
 
+---
+
 # Case Statements
 
 By default, when `case` finds the first match it will run the given commands and then exit, with no subsequent matches being attempted.  This behavior can be modified by changing `;;` to a different option (but also see the `GSG:` note below)
@@ -826,6 +831,8 @@ esac
 > [GSG](https://google.github.io/styleguide/shellguide.html):
 > - Try to always use `;;` and avoid the alternative `;&` and `;;&` notations
 > - For single-line clauses, put a space after the closing `)` of pattern, as well as a space before the ending `;;`
+
+---
 
 # Loops
 
@@ -874,9 +881,11 @@ done
 - expression2 defines the "while" loop condition, for example: `i < 5`
 - expression3 runs after every loop to iterate the counter, for example: `++i`
 
-# Arrays
+---
 
-- Bash array are one-dimensional (think of a single-column spreadsheet)
+# Array Variables
+
+- Bash arrays are one-dimensional (think of a single-column spreadsheet)
 - Arrays can be:
   - "indexed" which means they use a zero-based numerical index
   - "associative" which means they use a string-based index
@@ -959,3 +968,7 @@ unsorted_array=(q e h z a w r)
 sorted_array=( $(for i in "${unsorted_array[@]}"; do echo "$i"; done | sort) )
 echo "${sorted_array[@]}"
 ```
+
+---
+
+# Positional Parameters
