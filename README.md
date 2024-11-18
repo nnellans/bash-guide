@@ -546,12 +546,11 @@ Tilde Expansion is NOT performed on anything inside double quotes
 AKA variable expansions, which we touched on in the Variables section. There is a LOT involved with Parameter expansion:
 
 Standard Variable Expansion:
+- For more info, see the full section on [Variables](#variables) from earlier
 
 ```shell
 $var_name    # expands to the value of var_name
 ${var_name}  # expands to the value of var_name
-
-# for more info, see the full section on Variables earlier in this guide 
 ```
 
 Parameter Expansions dealing with non-existent or empty Variables:
@@ -589,9 +588,6 @@ ${var_name:5:10}   # start at offset 5, return the next 10 characters
 ${var_name: -5}    # return the last 5 characters from the end of the string, must have a space
 ${var_name: -7:3}  # start at the 7th character from the end, return the next 3 characters, must have a space
 ${var_name:5:-2}   # start at offset 5, return the remainder of the string but stopping before the last 2 characters
-${*:5}             # positional parameters: start at the 5th parameter, return the remainder of them. if double-quoted expands to one big word
-${@:5}             # positional parameters: same as above. if double-quoted expands to a separate word for each parameter
-${@: -7:3}         # positional parameters: start at the 7th parameter from the end, return the next 3, must have a space
 ${name[*]:5}       # indexed arrays: start at the 5th value, return the remaining values
 ${name[@]:5}       # indexed arrays: same as above
 ${name[@]: -7:3}   # indexed arrays: start at the 7th value from the end, return the next 3 values, must have a space
@@ -993,6 +989,18 @@ Using Positional Parameters:
 $3
 ${5}   # for 0 through 9, braces are optional
 ${25}  # starting with 10 and higher, braces are required
+```
+
+Substring Manipulation
+
+```shell
+# start at parameter `5` and return the remainder of parameters
+${*:5}  # if double-quoted, expands to one big word with all returned parameters
+${@:5}  # if double-quoted, expands to a separate word for each returned parameter
+
+# start at the 7th parameter from the end and return the next 3 parameters
+${*: -7:3}  # 
+${@: -7:3}  # 
 ```
 
 Special Positional Parameter syntax:
