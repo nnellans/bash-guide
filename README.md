@@ -409,7 +409,7 @@ command &>> file.txt  # append
 
 # Pattern Matching
 
-Can be used in multiple ways: filename expansion, parameter expansion `$( … )`, the `[[ … ]]` compound commands, the `case` statement, etc.
+Used in a few ways: parameter expansion, filename expansion, the `[[ … ]]` compound commands, the `case` statement, etc.
 
 The following is not an exhaustive list:
 
@@ -443,7 +443,7 @@ The following is not an exhaustive list:
 
 # Shell Arithmetic
 
-Can be used in multiple ways: arithmetic expansion `$(( … ))`, the `(( … ))` compound commands, the `let` command, the `expr` command, `for` loops, etc.
+Used in a few ways: arithmetic expansion, the `(( … ))` compound commands, the `let` & `expr` commands, `for` loops, etc.
 
 > [GSG](https://google.github.io/styleguide/shellguide.html): Always use `(( … ))` or `$(( … ))` rather than `let` or `expr` or `$[ … ]`
 
