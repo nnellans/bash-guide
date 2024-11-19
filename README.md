@@ -354,7 +354,8 @@ last line for now
 token
 
 # method 3b: using <<- instead of << lets you indent a Here Document for better readability
-# only tab characters are supported (not spaces), be careful with how your text editor treats tabs vs. spaces
+# only tab characters are supported (not spaces)
+# be careful with how your text editor treats tabs vs. spaces
 command1 <<- token
     indented line of text
     another line of text
