@@ -1010,11 +1010,11 @@ ${25}  # starting with 10 and higher, braces are required
 Substring Manipulation
 
 ```shell
-# start at parameter `5` and return the remainder of parameters
+# start at the 5th parameter, return the remainder of parameters
 ${*:5}  # if double-quoted, expands to one big word with all returned parameters
 ${@:5}  # if double-quoted, expands to a separate word for each returned parameter
 
-# start at the 7th parameter from the end and return the next 3 parameters
+# start at the 7th parameter from the end, return the next 3 parameters
 ${*: -7:3}  # if double-quoted, expands to one big word with all returned parameters 
 ${@: -7:3}  # if double-quoted, expands to a separate word for each returned parameter 
 ```
