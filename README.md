@@ -152,11 +152,11 @@ var1="value1" var2="value2" var3="value3"
 
 # another method is to use the declare command
 declare var_name="value"
-declare -r var_name="value" # the -r marks this variable as read-only (constant)
+declare -r VAR_NAME="value" # the -r marks this variable as read-only (constant)
 declare -i var_name=34527   # the -i marks this variable with the 'integer' attribute
 
 # another way to set a variable as readonly
-readonly var_name="value"
+readonly VAR_NAME="value"
 ```
 
 > [GSG](https://google.github.io/styleguide/shellguide.html): For sake of clarity use `readonly` instead of `declare -r`
@@ -458,6 +458,7 @@ int1 % int2   # remainder / modulo
 int1 ** int2  # exponentiation / power of
 
 # some special operators that also do assignment
+int1 = exp     # evaluate an expression (like 1+1) and assign the result to a variable
 ++int1         # increment by 1. same as the assignment: int1 = int1 + 1
 --int1         # decrement by 1. same as the assignment: int1 = int1 - 1
 int1 += int2   # increment by N. same as the assignment: int1 = int1 + int2
@@ -733,7 +734,7 @@ test expression  # less common form
 [ expression1 -o expression2 ]  # either expression1 OR expression2 succeeds
 ```
 
-`test` has many different types of tests. I will highlight some of them below. This is not an exhaustive list.
+`test` has many different types of tests. This is not an exhaustive list:
 
 ```shell
 # file-based expressions
@@ -797,8 +798,8 @@ Newly added expressions:
 
 # Case Statements
 
-By default, when `case` finds the first match it will run the given commands and then exit, with no subsequent matches being attempted.  This behavior can be modified by changing `;;` to a different option (but also see the `GSG:` note below)
-- As a fallback, it is common to use `*` as the final pattern as this will always match
+- When `case` finds a match it will run those commands and then exit, with no subsequent matches being attempted.  This behavior can be modified by changing `;;` to a different option (but also see the `GSG:` note below)
+- As a fallback option, it is common to use `*` as the final pattern, as this will always match
 - You can define multiple patterns on the same clause using the OR logical operator: `|`
 - Uses standard [Pattern Matching](#pattern-matching)
 
@@ -825,7 +826,8 @@ esac
 
 > [GSG](https://google.github.io/styleguide/shellguide.html):
 > - Try to always use `;;` and avoid the alternative `;&` and `;;&` notations
-> - For single-line clauses, put a space after the closing `)` of pattern, as well as a space before the ending `;;`
+> - For single-line clauses, put a space after the closing `)` of pattern, and before the ending `;;`
+> - `esac` statements should be on their own line vertically aligned with the opening statement
 
 ---
 
@@ -882,13 +884,19 @@ done
 - expression2 defines the "while" loop condition, for example: `i < 5`
 - expression3 runs after every loop to iterate the counter, for example: `++i`
 
+### Special Loop Commands
+
+`continue` will end processing for the current loop iteration, and start processing the next iteration.
+
+`break` will end the loop altogether.
+
 ---
 
 # Array Variables
 
 - Bash arrays are one-dimensional (think of a single-column spreadsheet)
 - Arrays can be:
-  - "indexed" which means they use a zero-based numerical index
+  - "indexed" which means they use a zero-based numeric index
   - "associative" which means they use a string-based index
 
 Naming standards: same as Shell variables
@@ -910,10 +918,10 @@ declare -a array_name
 declare -a array_name=("firstValue" "secondValue")
 
 # 5. mark as readonly with declare -a -r
-declare -a -r array_name=("firstValue" "secondValue")
+declare -a -r ARRAY_NAME=("firstValue" "secondValue")
 
 # 6. mark as readonly with readonly -a
-readonly -a array_name=("firstValue" "secondValue")
+readonly -a ARRAY_NAME=("firstValue" "secondValue")
 ```
 
 Defining Associative Arrays:
@@ -927,16 +935,16 @@ declare -A array_name([firstIndex]="firstValue" [secondindex]="secondValue")
 array_name[firstIndex]="firstValue"  # must 'declare' the associative array first
 
 # 3. mark as readonly with declare -A -r
-declare -A -r array_name=([firstIndex]="firstValue" [secondIndex]="secondValue")
+declare -A -r ARRAY_NAME=([firstIndex]="firstValue" [secondIndex]="secondValue")
 
 # 4. mark as readonly with readonly -A
-readonly -A array_name=([firstIndex]="firstValue" [secondIndex]="secondValue")
+readonly -A ARRAY_NAME=([firstIndex]="firstValue" [secondIndex]="secondValue")
 ```
 
 Using Array values:
 
 ```shell
-# preceed its name with a $ symbol, braces are required
+# preceed its name with a $ symbol, braces are required, index goes inside square brackets
 echo "${array_name[3]}"      # indexed arrays: expands to the value at index 3
 echo "${array_name[first]}"  # associate arrays: expands to the value at index "first"
 ```
@@ -957,7 +965,7 @@ ${array_name[@]}  # if double-quoted, expands to a separate word for each value
 
 # expands to all indexes in the array
 ${!array_name[*]}  # if double-quoted, expands to one big word with all indexes
-${!array_name[@]}  # if double-quoted, expands to a separate word for each value
+${!array_name[@]}  # if double-quoted, expands to a separate word for each index
 
 # add values to the end of an array with +=
 array_name+=("someValue" "anotherValue" "lastValue")
