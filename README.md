@@ -544,15 +544,16 @@ Tilde Expansion is NOT performed on anything inside double quotes
 
 ### 3. Parameter Expansion
 
-AKA variable expansions, which we touched on in the Variables section. There is a LOT involved with Parameter expansion:
+AKA variable expansions, which we touched on in the Variables section.
 
 Standard Variable Expansion:
-- For more info, see the full section on [Variables](#variables) from earlier
 
 ```shell
 $var_name    # expands to the value of var_name
 ${var_name}  # expands to the value of var_name
 ```
+
+- For more info, see the full section on [Variables](#variables) from earlier
 
 Parameter Expansions dealing with non-existent or empty Variables:
 
