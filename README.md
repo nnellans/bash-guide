@@ -70,8 +70,8 @@ The `set` command can be used to configure the shell.  Some common options are:
 - `set -e` exits the script immediately if any command fails (returns a non-zero exit status)
 - `set -u` exits the script immediately if you try to use a variable that's undefined
 - `set -o pipefail`
-  - When piping commands together (`command1 | command2`) Bash will only return the exit status of the last command
-  - This `set` option tells Bash to return a non-zero exit status if ANY of the commands in the pipeline fail
+  - When piping commands together Bash will only return the exit status of the last command
+  - But, using this `set` option tells Bash to return a non-zero exit status if ANY of the commands in the pipeline fail
 - Bash lets you combine short parameters together, so you can use all options together: `set -xeuo pipefail`
 
 ---
