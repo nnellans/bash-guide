@@ -242,7 +242,7 @@ function name_of_function() {
 
 The `return` command is optional and is not required.
 - By default, a Shell function will return the exit code from the last command it runs
-- However, if you would like your function to return a specific exit code, then you can use `return` followed by a number
+- If you want your function to return a specific exit code, use `return` followed by a number
 
 Using (calling) Shell functions:
 
