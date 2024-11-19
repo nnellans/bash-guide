@@ -498,7 +498,7 @@ Bash performs 7 different types of shell expansions:
 
 Brace Expansion lets you generate multiple strings from a given pattern. The pattern can be:
 - A comma-separated list of strings
-- A range of integers or characters, using 2 periods (`..`) to separate the starting and ending characters
+- A range of integers or characters, using 2 periods (`..`) to separate the starting and ending integers/characters
   - Optionally, you can include an integer at the end which specifies the increment that will be used
 
 Brace Expansion is NOT performed on anything inside double quotes
@@ -516,8 +516,8 @@ echo {001..100}  # you can add zeros and the expansion will zero-pad the result:
 
 # preamble and postscript
 echo da{me,re,ze}       # with optional preamble, returns: dame dare daze
-echo {her,my,them}self  # with optional postscript, returns: herself, myself, themself
-echo bi{ng,plan,pol}e   # with optional preamble & postscript, returns: binge, biplane, bipole
+echo {her,my,them}self  # with optional postscript, returns: herself myself themself
+echo bi{ng,plan,pol}e   # with optional preamble & postscript, returns: binge biplane bipole
 
 # nesting brace expansions is supported
 echo {one{1,2},two{1,2}}  # returns: one1 one2 two1 two2
