@@ -588,10 +588,6 @@ ${var_name:5:10}   # start at offset 5, return the next 10 characters
 ${var_name: -5}    # return the last 5 characters from the end of the string, must have a space
 ${var_name: -7:3}  # start at the 7th character from the end, return the next 3 characters, must have a space
 ${var_name:5:-2}   # start at offset 5, return the remainder of the string but stopping before the last 2 characters
-${name[*]:5}       # indexed arrays: start at the 5th value, return the remaining values
-${name[@]:5}       # indexed arrays: same as above
-${name[@]: -7:3}   # indexed arrays: start at the 7th value from the end, return the next 3 values, must have a space
-${name[10]:5}      # arrays: for the value of $name[10] start at offset 5, return the remainder of the string
 
 # prefix / suffix removal with pattern matching
 ${var_name#pattern}   # remove leading portion of the value that's matched by pattern (shortest match)
@@ -950,6 +946,9 @@ Special Array syntax:
 ${#array_name[*]}
 ${#array_name[@]}
 
+# expands to the length of the value for element `3`
+${#array_name[3]}
+
 # expands to all values in the array
 ${array_name[*]}  # if double-quoted, expands to one big word with all values
 ${array_name[@]}  # if double-quoted, expands to a separate word for each value
@@ -960,6 +959,21 @@ ${!array_name[@]}  # if double-quoted, expands to a separate word for each value
 
 # add values to the end of an array with +=
 array_name+=("someValue" "anotherValue" "lastValue")
+```
+
+Substring Manipulation:
+
+```shell
+# indexed arrays: start at the 5th value, return the remaining values
+${name[*]:5}       # if double-quoted, expands to one big word with all returned values
+${name[@]:5}       # if double-quoted, expands to a separate word for each returned value
+
+# indexed arrays: start at the 7th value from the end, return the next 3 values, must have a space
+${name[*]: -7:3}   # if double-quoted, expands to one big word with all returned values
+${name[*]: -7:3}   # if double-quoted, expands to a separate word for each returned value
+
+# all arrays: for the value of $name[10] start at offset 5, return the remainder of the value
+${name[10]:5}
 ```
 
 Sorting an array:
@@ -981,7 +995,7 @@ echo "${sorted_array[@]}"
   - Arguments passed to a script
   - Arguments passed to a shell function
 - Can be reassigned using the `set` command
-- Positional Parameter `0` always expands to the name of the shell or shell script, which means the first passed argument will be at Positional Parameter `1`
+- Positional Parameter `0` always expands to the name of the shell or shell script, which means the first actual passed argument will be at Positional Parameter `1`
 
 Using Positional Parameters:
 
@@ -999,8 +1013,8 @@ ${*:5}  # if double-quoted, expands to one big word with all returned parameters
 ${@:5}  # if double-quoted, expands to a separate word for each returned parameter
 
 # start at the 7th parameter from the end and return the next 3 parameters
-${*: -7:3}  # 
-${@: -7:3}  # 
+${*: -7:3}  # if double-quoted, expands to one big word with all returned parameters 
+${@: -7:3}  # if double-quoted, expands to a separate word for each returned parameter 
 ```
 
 Special Positional Parameter syntax:
@@ -1010,6 +1024,9 @@ Special Positional Parameter syntax:
 $#
 ${#*}
 ${#@}
+
+# expands to the length of the value for the 5th positional parameter
+${#5}
 
 # expands to the values of all positional parameters
 $*  # if double-quoted, expands to one big word with all positional parameters values
