@@ -664,7 +664,7 @@ $(( (5 + 5) * 2 ))       # grouping subexpressions with parenthesis
 
 ### 6. Word Splitting
 
-- By default, Word Splitting looks for spaces, tabs, and newline characters and treats them as delimiters between words
+- Word Splitting looks for spaces, tabs, and newline characters and treats them as delimiters between words
 - Spaces, tabs, and newlines are the default value for the special Shell variable `$IFS` (which stands for Internal Field Separator)
   - If you want Word Splitting to operate differently, then update the value of `$IFS`
 - Word Splitting only occurs on the results of other expansions, namely Parameter Expansion, Command Substitution, and Arithmetic Expansion
