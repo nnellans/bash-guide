@@ -745,7 +745,7 @@ test expression  # less common form
 [ string ]              # the given string's length is greater than 0
 [ -n string ]           # same as above. this is the preferred form
 [ -z string ]           # the given string's length is 0
-[ string1 = string2 ]   # string1 is equal to string2. don't use this form, as it can be confused with assignment
+[ string1 = string2 ]   # string1 is equal to string2. don't use this, often confused with assignment
 [ string1 == string2 ]  # same as above. this is the preferred form
 [ string1 != string2 ]  # string1 is not equal to string2
 
