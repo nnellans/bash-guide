@@ -56,7 +56,7 @@ echo "something" # comments can also go after a command, with at least 1 space b
 
 ### Shebang
 
-- This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script.
+- This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script
 - Standard example: `#!/bin/bash`
   - Note: not all systems place `bash` in `/bin`
 - Portable version: `#!/usr/bin/env bash`
@@ -67,7 +67,7 @@ echo "something" # comments can also go after a command, with at least 1 space b
 
 The `set` command can be used to configure the shell.  Some common options are:
 - `set -x` enables debug mode, where commands and arguments are printed out as they are executed
-- `set -e` exits the script immediately if any command returns a non-zero exit status
+- `set -e` exits the script immediately if any command fails (returns a non-zero exit status)
 - `set -u` exits the script immediately if you try to use a variable that's undefined
 - `set -o pipefail`
   - When piping commands together (`command1 | command2`) Bash will only return the exit status of the last command
