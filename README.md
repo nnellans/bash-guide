@@ -218,7 +218,7 @@ Using Environment variables: same as Shell variables
 
 In your code, you must define your functions first before you can call them
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): Put all functions at the top of the file, only preceeded by includes, set statements, and declaring constants.
+> [GSG](https://google.github.io/styleguide/shellguide.html): Put all functions at the top of the file, only preceeded by includes, set statements, & declaring constants
 
 Naming standards: same as Shell variables
 
