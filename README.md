@@ -155,7 +155,7 @@ declare var_name="value"
 declare -r VAR_NAME="value" # the -r marks this variable as read-only (constant)
 declare -i var_name=34527   # the -i marks this variable with the 'integer' attribute
 
-# another way to set a variable as readonly
+# another way to set a variable as read-only
 readonly VAR_NAME="value"
 ```
 
@@ -194,25 +194,31 @@ Naming standards: same as Shell variables
 Defining Environment variables:
 
 ```shell
-# method 1: assign a value to a Shell variable, then 'export' it to an Environment variable
+# assign a value to a Shell variable, then 'export' it to an Environment variable
 VAR_NAME="some value"
 export VAR_NAME
 
-# method 2: use export to create an Environment variable and assign a value at the same time
+# use export to create an Environment variable and assign a value at the same time
 export VAR_NAME="some value"
 
-# method 3: use the declare command to create an Environment variable
-declare -x VAR_NAME="some value" # the -x tells declare to 'export' this variable
+# use the declare command to create an Environment variable
+declare -x VAR_NAME="some value"     # the -x tells declare to 'export' this variable
+declare -x -r VAR_NAME="some value"  # the -r marks this environment variable as read-only
+
+# another way to set an environment variable as read-only
+readonly VAR_NAME="some value"
+export VAR_NAME
 ```
 
-> [GSG](https://google.github.io/styleguide/shellguide.html): For sake of clarity use `export` instead of `declare -x`
+> [GSG](https://google.github.io/styleguide/shellguide.html): For sake of clarity use `export` instead of `declare`
 
 Using Environment variables: same as Shell variables
 
 # Shell Functions
 
-> [!IMPORTANT]  
-> In your code, you must define your functions first before you can call them
+In your code, you must define your functions first before you can call them
+
+> [GSG](https://google.github.io/styleguide/shellguide.html): Put functions all together near the top of the file, only preceeded by includes, set statements, and declaring constants.
 
 Naming standards: same as Shell variables
 
@@ -341,8 +347,12 @@ There are multiple commands to view the Shell variables, Environment variables, 
 # method 1: run command1 first and "pipe" its output into command2's standard input
 command1 | command2
 
-# method 2: take the contents of file.txt and feed it into command1's standard input
+# method 2a: take the contents of file.txt and feed it into command1's standard input
 command1 < file.txt
+
+# method 2b: process substitution, represented by <(command)
+# creates a "file" from command2's output, and feeds the "file" into command1's input
+command1 < <(command2)
 
 # method 3a: "Here Document": feed a whole body of text into command1's standard input
 # the "token" should not be found anywhere else in the body of text
