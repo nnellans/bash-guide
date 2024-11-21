@@ -152,8 +152,8 @@ var1="value1" var2="value2" var3="value3"
 
 # another method is to use the declare command
 declare var_name="value"
-declare -r VAR_NAME="value" # the -r marks this variable as read-only (constant)
-declare -i var_name=34527   # the -i marks this variable with the 'integer' attribute
+declare -r VAR_NAME="value"  # the -r marks this variable as read-only (constant)
+declare -i var_name=34527    # the -i marks this variable with the 'integer' attribute
 
 # another way to set a variable as read-only
 readonly VAR_NAME="value"
