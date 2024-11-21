@@ -351,7 +351,7 @@ command1 | command2
 command1 < file.txt
 
 # method 2b: process substitution, represented by <(command)
-# creates a "file" from command2's output, and feeds the "file" into command1's input
+# creates a "file" from command2's output, and feeds the "file" into command1's standard input
 command1 < <(command2)
 
 # method 3a: "Here Document": feed a whole body of text into command1's standard input
