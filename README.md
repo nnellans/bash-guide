@@ -596,17 +596,17 @@ Parameter expansions dealing with string manipulations:
 
 ```shell
 # substring
-${var_name:5}      # start at 5, return remainder
-${var_name:5:10}   # start at 5, return next 10
-${var_name: -5}    # return last 5 from the end of the string
-${var_name: -7:3}  # start at 7th from the end, return next 3
-${var_name:5:-2}   # start at 5, return remainder, stopping before last 2
+${var_name:5}      # start at offset 5, return remaining characters
+${var_name:5:10}   # start at offset 5, return next 10 characters
+${var_name: -5}    # return last 5 characters from the end of the string
+${var_name: -7:3}  # start at 7th character from the end, return next 3 characters
+${var_name:5:-2}   # start at offset 5, return remaining characters, except for the last 2
 
 # prefix / suffix removal with pattern matching
-${var_name#pattern}   # remove leading portion of the value that's matched by pattern (shortest match)
-${var_name##pattern}  # remove leading portion of the value that's matched by pattern (longest match)
-${var_name%pattern}   # remove ending portion of the value that's matched by pattern (shortest match)
-${var_name%%pattern}  # remove ending portion of the value that's matched by pattern (longest match)
+${var_name#pattern}   # remove leading portion of the value which matches the pattern (shortest match)
+${var_name##pattern}  # remove leading portion of the value which matches the pattern (longest match)
+${var_name%pattern}   # remove ending portion of the value which matches the pattern (shortest match)
+${var_name%%pattern}  # remove ending portion of the value which matches the pattern (longest match)
 
 # search and replace with pattern matching
 # /replacementString is optional, if omitted the occurences will be deleted
