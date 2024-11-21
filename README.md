@@ -491,11 +491,11 @@ int1 >= int2  # greater than or equal to
 expression1 && expression2  # both expression1 AND expression2 succeeds
 expression1 || expression2  # either expression1 OR expression2 succeeds
 
-# ternary conditional operator
+# ternary conditional operator, a condensed if/then/else for arithmetic expressions
 # test expression1 first
-# - if it succeeds, THEN test expression2
-# - if it fails, ELSE test expression3
-# will return the exit status from expression2 or 3 (whichever one gets tested)
+# - if it succeeds, run expression2
+# - if it fails, run expression3
+# will return the exit status from expression2 or 3 (whichever one actually runs)
 expression1 ? expression2 : expression3
 ```
 
