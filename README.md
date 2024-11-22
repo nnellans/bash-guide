@@ -1,6 +1,6 @@
 # Bash Scripting Guide
 
-- Version: 0.0.1
+- Version: 1.0.0
 - Author:
   - Nathan Nellans
   - Email: me@nathannellans.com
