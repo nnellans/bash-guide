@@ -1,12 +1,12 @@
 # Bash Scripting Guide
 
-- Version: 1.0.0
-- Author:
-  - Nathan Nellans
-  - Email: me@nathannellans.com
-  - Web:
-    - https://www.nathannellans.com
-    - https://github.com/nnellans/bash-guide
+-   Version: 1.0.1
+-   Author:
+    -   Nathan Nellans
+    -   Email: me@nathannellans.com
+    -   Web:
+        -   https://www.nathannellans.com
+        -   https://github.com/nnellans/bash-guide
 
 > [!IMPORTANT]
 > This is an advanced guide and assumes you already know the basics of Bash.  Think of this more like an advanced cheat sheet.  I went through various sources, captured any notes that I felt were important, and organized them into the README file you see here.
@@ -19,31 +19,33 @@
 
 ---
 
-# Table of Contents
-- [Script File Basics](#script-file-basics)
-- [Commands](#commands)
-- [Variables](#variables)
-  - [Shell Variables](#shell-variables)
-  - [Environment Variables](#environment-variables)
-- [Shell Functions](#shell-functions)
-  - [Local Variables](#local-variables)
-- [Aliases](#aliases)
-- [Viewing Variables, Functions, and Aliases](#viewing-variables-functions-and-aliases)
-- [Standard Input, Output, and Error](#standard-input-output-and-error)
-- [Pattern Matching](#pattern-matching)
-- [Shell Arithmetic](#shell-arithmetic)
-- [Shell Expansions](#shell-expansions)
-- [If Statements](#if-statements)
-  - [test and [ ] commands](#conditional-1-the-test-and----commands)
-  - [\[\[ \]\] commands](#conditional-2-the----commands)
-  - [(( )) commands](#conditional-3-the----commands)
-- [Case Statements](#case-statements)
-- [Loops](#loops)
-- [Array Variables](#array-variables)
-- [Positional Parameters](#positional-parameters)
+## Table of Contents
+
+-   [Script File Basics](#script-file-basics)
+-   [Commands](#commands)
+-   [Variables](#variables)
+    -   [Shell Variables](#shell-variables)
+    -   [Environment Variables](#environment-variables)
+-   [Shell Functions](#shell-functions)
+    -   [Local Variables](#local-variables)
+-   [Aliases](#aliases)
+-   [Viewing Variables, Functions, and Aliases](#viewing-variables-functions-and-aliases)
+-   [Standard Input, Output, and Error](#standard-input-output-and-error)
+-   [Pattern Matching](#pattern-matching)
+-   [Shell Arithmetic](#shell-arithmetic)
+-   [Shell Expansions](#shell-expansions)
+-   [If Statements](#if-statements)
+    -   [test and [ ] commands](#conditional-1-the-test-and----commands)
+    -   [\[\[ \]\] commands](#conditional-2-the----commands)
+    -   [(( )) commands](#conditional-3-the----commands)
+-   [Case Statements](#case-statements)
+-   [Loops](#loops)
+-   [Array Variables](#array-variables)
+-   [Positional Parameters](#positional-parameters)
 
 ---
-# Script File Basics
+
+## Script File Basics
 
 Shell scripts commonly use the `.sh` file extension.
 
@@ -56,29 +58,31 @@ echo "something" # comments can also go after a command, with at least 1 space b
 
 ### Shebang
 
-- This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script
-- Standard example: `#!/bin/bash`
-  - Note: not all systems place `bash` in `/bin`
-- Portable version: `#!/usr/bin/env bash`
-  - This version will run the first `bash` found in the `$PATH` variable
-  - Note: not all systems place `env` in `/usr/bin`
+-   This should be on line 1 of all Bash scripts.  It tells the kernel which interpreter to use when running the script
+-   Standard example: `#!/bin/bash`
+    -   Note: not all systems place `bash` in `/bin`
+-   Portable version: `#!/usr/bin/env bash`
+    -   This version will run the first `bash` found in the `$PATH` variable
+    -   Note: not all systems place `env` in `/usr/bin`
 
 ### Shell options
 
 The `set` command can be used to configure the shell.  Some common options are:
-- `set -x` enables debug mode, where commands and arguments are printed out as they are executed
-- `set -e` exits the script immediately if any command fails (returns a non-zero exit status)
-- `set -u` exits the script immediately if you try to use a variable that's undefined
-- `set -o pipefail`
-  - When piping commands together Bash will only return the exit status of the last command
-  - This `set` command tells Bash to return a non-zero exit status if ANY of the commands in the pipeline fail
-- Bash lets you combine short parameters together, so you can use all options together: `set -xeuo pipefail`
+
+-   `set -x` enables debug mode, where commands and arguments are printed out as they are executed
+-   `set -e` exits the script immediately if any command fails (returns a non-zero exit status)
+-   `set -u` exits the script immediately if you try to use a variable that's undefined
+-   `set -o pipefail`
+    -   When piping commands together Bash will only return the exit status of the last command
+    -   This `set` command tells Bash to return a non-zero exit status if ANY of the commands in the pipeline fail
+-   Bash lets you combine short parameters together, so you can use all options together: `set -xeuo pipefail`
 
 ---
 
-# Commands
+## Commands
 
 There are multiple types of commands you can run with bash:
+
 1. Executables (like binaries and scripts)
 2. Shell built-ins and keywords
 3. Shell functions
@@ -125,13 +129,14 @@ echo "$?"  # the special variable $? expands to the exit status of the last comm
 
 ---
 
-# Variables
+## Variables
 
 ### Shell Variables
 
 Shell variables are only available to the particular shell session or script in which they are created.
 
 Naming conventions:
+
 - May contain letters, numbers, and underscores
 - Must not start with a number
 - Names are case-sensitive, so `varname` is different than `VarName`
@@ -172,10 +177,10 @@ echo "${var_name}plusSomeMoreText"
 ```
 
 > [GSG](https://google.github.io/styleguide/shellguide.html):
-> - Always double-quote strings containing variables
-> - Prefer `${var_name}` over `$var_name`, except:
->   - Don't use braces for special variables like `$@` or `$!`, unless strictly necessary
->   - Don't use braces for the first 10 positional parameters like `$0` and `$6`
+> -   Always double-quote strings containing variables
+> -   Prefer `${var_name}` over `$var_name`, except:
+>     - Don't use braces for special variables like `$@` or `$!`, unless strictly necessary
+>     - Don't use braces for the first 10 positional parameters like `$0` and `$6`
 
 Assigning temporary values to variables:
 
@@ -214,7 +219,7 @@ export VAR_NAME
 
 Using Environment variables: same as Shell variables
 
-# Shell Functions
+## Shell Functions
 
 In your code, you must define your functions first before you can call them
 
@@ -247,6 +252,7 @@ function name_of_function() {
 > - The `function` keyword enhances quick identification of functions
 
 The `return` command is optional and is not required.
+
 - By default, a Shell function will return the exit code from the last command it runs
 - If you want your function to return a specific exit code, use `return` followed by a number
 
@@ -276,9 +282,9 @@ function_name "arg1" "arg2" "arg3"
 ### Local Variables
 
 You can define and use Local variables inside your functions.
-- Local variables are visible only to the function where they are defined, and its children
-- The names of Local variables will not conflict with other global variables defined elsewhere
-  - This helps you to create portable functions
+-   Local variables are visible only to the function where they are defined, and its children
+-   The names of Local variables will not conflict with other global variables defined elsewhere
+    -   This helps you to create portable functions
  
 Defining and using Local variables in a function:
 
@@ -308,7 +314,7 @@ function_name() {
 > var_name="$(someCommand)"
 > ```
 
-# Aliases
+## Aliases
 
 > [GSG](https://google.github.io/styleguide/shellguide.html): Aliases should be avoided in scripts. For almost every purpose, shell functions are preferred over aliases.
 
@@ -325,7 +331,7 @@ command2
 alias_name
 ```
 
-# Viewing Variables, Functions, and Aliases
+## Viewing Variables, Functions, and Aliases
 
 There are multiple commands to view the Shell variables, Environment variables, Functions, and Aliases that are defined in your environment. Below, you'll see a graphic I created that shows some of those commands, and what information each one will return.
 
@@ -333,7 +339,7 @@ There are multiple commands to view the Shell variables, Environment variables, 
 
 ---
 
-# Standard Input, Output, and Error
+## Standard Input, Output, and Error
 
 | Stream | Purpose | Default | File Descriptor |
 | --- | --- | --- | --- |
@@ -417,7 +423,7 @@ command &>> file.txt  # append
 
 ---
 
-# Pattern Matching
+## Pattern Matching
 
 Used in a few ways: parameter expansion, filename expansion, the `[[ … ]]` compound commands, the `case` statement, etc.
 
@@ -451,7 +457,7 @@ The following is not an exhaustive list:
 
 ---
 
-# Shell Arithmetic
+## Shell Arithmetic
 
 Used in a few ways: arithmetic expansion, the `(( … ))` compound commands, the `let` & `expr` commands, `for` loops, etc.
 
@@ -501,16 +507,16 @@ expression1 ? expression2 : expression3
 
 ---
 
-# Shell Expansions
+## Shell Expansions
 
 Bash performs 7 different types of shell expansions:
 
 ### 1. Brace Expansion
 
 Brace Expansion lets you generate multiple strings from a given pattern. The pattern can be:
-- A comma-separated list of strings
-- A range of integers or characters, using 2 periods (`..`) to separate the starting and ending integers/characters
-  - Optionally, you can include an integer at the end which specifies the increment that will be used
+-   A comma-separated list of strings
+-   A range of integers or characters, using 2 periods (`..`) to separate the starting and ending integers/characters
+    -   Optionally, you can include an integer at the end which specifies the increment that will be used
 
 Brace Expansion is NOT performed on anything inside double quotes
 
@@ -659,6 +665,7 @@ $(< file.txt)   # you can use this
 ### 5. Arithmetic Expansion
 
 Expands to the result of an arithmetic expression
+
 - Only supports integers
 - Supports the operators from the [Shell Arithmetic](#shell-arithmetic) section
 
@@ -675,11 +682,11 @@ $(( (5 + 5) * 2 ))       # grouping subexpressions with parenthesis
 
 ### 6. Word Splitting
 
-- Word Splitting looks for spaces, tabs, and newline characters and treats them as delimiters between words
-- Spaces, tabs, and newlines are the default value for the special Shell variable `$IFS` (which stands for Internal Field Separator)
-  - If you want Word Splitting to operate differently, then update the value of `$IFS`
-- Word Splitting only occurs on the results of other expansions, namely Parameter Expansion, Command Substitution, and Arithmetic Expansion
-- Word Splitting is NOT performed on anything inside double quotes
+-   Word Splitting looks for spaces, tabs, and newline characters and treats them as delimiters between words
+-   Spaces, tabs, and newlines are the default value for the special Shell variable `$IFS` (which stands for Internal Field Separator)
+    -   If you want Word Splitting to operate differently, then update the value of `$IFS`
+-   Word Splitting only occurs on the results of other expansions, namely Parameter Expansion, Command Substitution, and Arithmetic Expansion
+-   Word Splitting is NOT performed on anything inside double quotes
 
 ### 7. Filename Expansion
 
@@ -706,7 +713,7 @@ ls /usr/bin/m*
 
 ---
 
-# If Statements
+## If Statements
 
 ```shell
 if conditional; then
@@ -722,10 +729,10 @@ fi
 > - Put `; then` at the end of the same line that contains `if` or `elif`
 > - `fi` statements should be on their own line vertically aligned with the opening statement
 
-- `conditional` can be any command, or set of commands, that will return an exit status
-  - In Bash, if a command is successful it has an exit status of `0`, and if it fails it will have a non-zero exit status
-- `elif` and `else` are optional, only use them if you need to
-- There are multiple ways to write your conditional expression. Three of those ways will be explored below
+-   `conditional` can be any command, or set of commands, that will return an exit status
+    -   In Bash, if a command is successful it has an exit status of `0`, and if it fails it will have a non-zero exit status
+-   `elif` and `else` are optional, only use them if you need to
+-   There are multiple ways to write your conditional expression. Three of those ways will be explored below
 
 ### Conditional 1: the `test` and `[ … ]` commands
 
@@ -806,7 +813,7 @@ Newly added expressions:
 
 ---
 
-# Case Statements
+## Case Statements
 
 - When `case` finds a match it will run those commands and then exit, with no subsequent matches being attempted.  This behavior can be modified by changing `;;` to a different option (but also see the `GSG:` note below)
 - As a fallback option, it is common to use `*` as the final pattern, as this will always match
@@ -841,7 +848,7 @@ esac
 
 ---
 
-# Loops
+## Loops
 
 > [GSG](https://google.github.io/styleguide/shellguide.html):
 > - Put `; do` at the end of the same line that contains `while`, `until`, or `for`
@@ -902,12 +909,12 @@ done
 
 ---
 
-# Array Variables
+## Array Variables
 
-- Bash arrays are one-dimensional (think of a single-column spreadsheet)
-- Arrays can be:
-  - "indexed" which means they use a zero-based numeric index
-  - "associative" which means they use a string-based index
+-   Bash arrays are one-dimensional (think of a single-column spreadsheet)
+-   Arrays can be:
+    -   "indexed" which means they use a zero-based numeric index
+    -   "associative" which means they use a string-based index
 
 Naming standards: same as Shell variables
 
@@ -1008,14 +1015,14 @@ echo "${sorted_array[@]}"
 
 ---
 
-# Positional Parameters
+## Positional Parameters
 
-- Used in a few circumstances:
-  - Arguments passed to the shell when its invoked
-  - Arguments passed to a script
-  - Arguments passed to a shell function
-- Can be reassigned using the `set` command
-- Positional Parameter `0` always expands to the name of the shell or shell script, which means the first actual passed argument will be at Positional Parameter `1`
+-   Used in a few circumstances:
+    -   Arguments passed to the shell when its invoked
+    -   Arguments passed to a script
+    -   Arguments passed to a shell function
+-   Can be reassigned using the `set` command
+-   Positional Parameter `0` always expands to the name of the shell or shell script, which means the first actual passed argument will be at Positional Parameter `1`
 
 Using Positional Parameters:
 
